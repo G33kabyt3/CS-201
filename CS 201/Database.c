@@ -7,6 +7,8 @@
 //
 
 #include "Database.h"
+#include <sys/stat.h>
+#include <sys/types.h>
 
 int addUser(struct User user)
 {
@@ -16,13 +18,7 @@ int addUser(struct User user)
 void refreshUsers ()
 {
     FILE* userFile;
-    userFile = fopen("userinfo.txt", "f");
-    if (!userFile)
-    {
-        printf("File not found. Creating new file.\n");
-        fopen("userinfo.txt", "w")
-    } else {
-        printf("User file found!\n");
-    }
-    
+    int success = mkdir("201Data", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    userFile = fopen("201Data/userData.txt", "w+");
+    fclose(userFile);
 }

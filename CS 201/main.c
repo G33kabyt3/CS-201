@@ -8,10 +8,13 @@
 
 #include <stdio.h>
 #include "Interface201.h"
+#include "Database.h"
 
 int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
+    refreshUsers();
     bootInterface();
+    
     return 0;
 }

@@ -19,9 +19,10 @@ struct User {
     char username[100];
     char password [100];
     struct MovieList catalog;
-    
+    struct User * nxtUser;
 };
 
 int addUser(struct User);
+void refreshUsers(void);
 
 #endif /* Database_h */
