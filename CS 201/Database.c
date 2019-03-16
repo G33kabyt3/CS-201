@@ -12,3 +12,17 @@ int addUser(struct User user)
 {
     return 1;
 }
+
+void refreshUsers ()
+{
+    FILE* userFile;
+    userFile = fopen("userinfo.txt", "f");
+    if (!userFile)
+    {
+        printf("File not found. Creating new file.\n");
+        fopen("userinfo.txt", "w")
+    } else {
+        printf("User file found!\n");
+    }
+    
+}

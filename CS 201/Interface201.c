@@ -21,15 +21,17 @@ void createUserI()
     int success =0;
     while (success!= 1)
     {
-        printf("Please type the desired username for the new user. Please note that it may only be 20 characters long. Any overflow characters will not be considered.");
+        printf("Please type the desired username for the new user. Please note that it may only be 20 characters long. Any overflow characters will not be considered.\n");
         getline(&username, &numBytes, stdin);
-        printf("Please type the desired password for the new user. Please note that it may only be 20 characters long. Any overflow characters will not be considered.");
+        printf("Please type the desired password for the new user. Please note that it may only be 20 characters long. Any overflow characters will not be considered.\n");
         getline(&password, &numBytes, stdin);
-        success = createUserC(username, password);
-        if (success ==0)
+        if (createUserC(username, password) == 0)
         {
-            printf("Username taken. Please try another.");
+            printf("Username taken. Please try another.\n");
         }
+        
+         printf("Creation Successful. \n");
+        
     }
     
     free(username);
@@ -44,13 +46,13 @@ int logInI()
     char *password;
     password = (char *) malloc (numBytes+1);
     
-    printf("Please type in your username.");
+    printf("Please type in your username.\n");
     getline(&username, &numBytes, stdin);
-    printf("Please type the your password for the new user.");
+    printf("Please type the your password.\n");
     getline(&password, &numBytes, stdin);
     if ( logInC(username, password)==0)
     {
-        printf("Incorrect log in information. Please try again later.");
+        printf("Incorrect log in information. Please try again later.\n");
         free(username);
         free(password);
         return 0;
@@ -62,7 +64,7 @@ int logInI()
 void logOutI()
 {
     logOutC();
-    printf("Logout successful");
+    printf("Logout successful.\n");
 }
 
 void deleteUserI()
@@ -88,7 +90,7 @@ void displayCatalogI()
     {
         printf("%s\n", temp.data);
     }
-    printf("Catalog displayed.");
+    printf("Catalog displayed.\n");
 }
 
 void searchForTitleI()
@@ -111,7 +113,7 @@ void mainMenu()
         if (strcmp(str, "0\n") == 0)
         {
             printf("Search For Title Selected.\n");
-            logInI();
+            searchForTitleI();
         } else if (strcmp(str, "1\n") == 0)
         {
             printf("Add to Catalog Collected.\n");
@@ -155,8 +157,8 @@ void bootInterface()
         if (strcmp(str, "0\n") == 0)
         {
             printf("Log In Selected.\n");
-            int x = logInI();
-            if (x == 1)
+            
+            if (logInI() == 1)
             {
                 printf("Log in Successful! Sending to Main Menu.\n");
                 mainMenu();
