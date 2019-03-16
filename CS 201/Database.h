@@ -24,5 +24,6 @@ struct User {
 
 int addUser(struct User);
 void refreshUsers(void);
+void bootDatabase(void);
 
 #endif /* Database_h */

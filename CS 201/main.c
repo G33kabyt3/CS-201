@@ -13,7 +13,7 @@
 int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
-    refreshUsers();
+    bootDatabase();
     bootInterface();
     
     return 0;
