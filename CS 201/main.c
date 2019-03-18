@@ -13,10 +13,10 @@
 int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
-    bootDatabase();
-    char string [] = "0000014 \t short \t The Sprinkler Sprinkled \t L'arroseur arrosé \t 0 \t 1895 \t 0 \t 1 \t Comedy,Short";
-    extractData(string);
-    bootInterface();
+    //bootDatabase();
+   // char string [] = "0000014 \t short \t The Sprinkler Sprinkled \t L'arroseur arrosé \t 0 \t 1895 \t 0 \t 1 \t Comedy,Short";
+    //extractData(string);
+    //bootInterface();
    
     return 0;
 }

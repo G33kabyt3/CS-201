@@ -12,16 +12,12 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include "MovieTree.h"
+#include "UserList.h"
 FILE* userFile;
 FILE* movieFile;
 
-struct mNode {
-    //Attributes for AVL tree.
-    struct mNode * left;
-    struct mNode * right;
-    int weight;
-    struct mNodeData *data;
-};
+
 
 int addUser(struct User user)
 {

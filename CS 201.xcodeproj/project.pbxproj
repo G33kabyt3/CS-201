@@ -12,6 +12,8 @@
 		105A794B22277216000EAFC9 /* Control.c in Sources */ = {isa = PBXBuildFile; fileRef = 105A794A22277216000EAFC9 /* Control.c */; };
 		105A794E2227722B000EAFC9 /* Database.c in Sources */ = {isa = PBXBuildFile; fileRef = 105A794D2227722B000EAFC9 /* Database.c */; };
 		10E1C65D223F3740003CFDBA /* MovieTree.c in Sources */ = {isa = PBXBuildFile; fileRef = 10E1C65C223F3740003CFDBA /* MovieTree.c */; };
+		10E1C660223F3BC7003CFDBA /* UserList.c in Sources */ = {isa = PBXBuildFile; fileRef = 10E1C65F223F3BC7003CFDBA /* UserList.c */; };
+		10E1C663223F3FE8003CFDBA /* MovieList.c in Sources */ = {isa = PBXBuildFile; fileRef = 10E1C662223F3FE8003CFDBA /* MovieList.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +39,10 @@
 		105A794D2227722B000EAFC9 /* Database.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Database.c; sourceTree = "<group>"; };
 		10E1C65B223F3740003CFDBA /* MovieTree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieTree.h; sourceTree = "<group>"; };
 		10E1C65C223F3740003CFDBA /* MovieTree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = MovieTree.c; sourceTree = "<group>"; };
+		10E1C65E223F3BC7003CFDBA /* UserList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserList.h; sourceTree = "<group>"; };
+		10E1C65F223F3BC7003CFDBA /* UserList.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = UserList.c; sourceTree = "<group>"; };
+		10E1C661223F3FE8003CFDBA /* MovieList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieList.h; sourceTree = "<group>"; };
+		10E1C662223F3FE8003CFDBA /* MovieList.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = MovieList.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +75,8 @@
 		105A793E222730DC000EAFC9 /* CS 201 */ = {
 			isa = PBXGroup;
 			children = (
+				10E1C65E223F3BC7003CFDBA /* UserList.h */,
+				10E1C65F223F3BC7003CFDBA /* UserList.c */,
 				105A793F222730DC000EAFC9 /* main.c */,
 				105A794622273426000EAFC9 /* Interface201.h */,
 				105A794722273426000EAFC9 /* Interface201.c */,
@@ -78,6 +86,8 @@
 				105A794D2227722B000EAFC9 /* Database.c */,
 				10E1C65B223F3740003CFDBA /* MovieTree.h */,
 				10E1C65C223F3740003CFDBA /* MovieTree.c */,
+				10E1C661223F3FE8003CFDBA /* MovieList.h */,
+				10E1C662223F3FE8003CFDBA /* MovieList.c */,
 			);
 			path = "CS 201";
 			sourceTree = "<group>";
@@ -138,6 +148,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10E1C660223F3BC7003CFDBA /* UserList.c in Sources */,
+				10E1C663223F3FE8003CFDBA /* MovieList.c in Sources */,
 				105A794E2227722B000EAFC9 /* Database.c in Sources */,
 				105A7940222730DC000EAFC9 /* main.c in Sources */,
 				105A794B22277216000EAFC9 /* Control.c in Sources */,

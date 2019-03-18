@@ -8,6 +8,7 @@
 
 #include "Control.h"
 #include "Database.h"
+#include "UserList.h"
 struct User* currentUser = NULL;
 struct stringLList defaultList;
 
