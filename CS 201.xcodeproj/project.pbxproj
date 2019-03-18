@@ -11,6 +11,7 @@
 		105A794822273426000EAFC9 /* Interface201.c in Sources */ = {isa = PBXBuildFile; fileRef = 105A794722273426000EAFC9 /* Interface201.c */; };
 		105A794B22277216000EAFC9 /* Control.c in Sources */ = {isa = PBXBuildFile; fileRef = 105A794A22277216000EAFC9 /* Control.c */; };
 		105A794E2227722B000EAFC9 /* Database.c in Sources */ = {isa = PBXBuildFile; fileRef = 105A794D2227722B000EAFC9 /* Database.c */; };
+		10E1C65D223F3740003CFDBA /* MovieTree.c in Sources */ = {isa = PBXBuildFile; fileRef = 10E1C65C223F3740003CFDBA /* MovieTree.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +35,8 @@
 		105A794A22277216000EAFC9 /* Control.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Control.c; sourceTree = "<group>"; };
 		105A794C2227722B000EAFC9 /* Database.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
 		105A794D2227722B000EAFC9 /* Database.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Database.c; sourceTree = "<group>"; };
+		10E1C65B223F3740003CFDBA /* MovieTree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieTree.h; sourceTree = "<group>"; };
+		10E1C65C223F3740003CFDBA /* MovieTree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = MovieTree.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +76,8 @@
 				105A794A22277216000EAFC9 /* Control.c */,
 				105A794C2227722B000EAFC9 /* Database.h */,
 				105A794D2227722B000EAFC9 /* Database.c */,
+				10E1C65B223F3740003CFDBA /* MovieTree.h */,
+				10E1C65C223F3740003CFDBA /* MovieTree.c */,
 			);
 			path = "CS 201";
 			sourceTree = "<group>";
@@ -136,6 +141,7 @@
 				105A794E2227722B000EAFC9 /* Database.c in Sources */,
 				105A7940222730DC000EAFC9 /* main.c in Sources */,
 				105A794B22277216000EAFC9 /* Control.c in Sources */,
+				10E1C65D223F3740003CFDBA /* MovieTree.c in Sources */,
 				105A794822273426000EAFC9 /* Interface201.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

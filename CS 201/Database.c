@@ -14,28 +14,6 @@
 #include <sys/types.h>
 FILE* userFile;
 FILE* movieFile;
-struct mNodeData
-{
-    //Database ID of the title.
-    int ID;
-    //Type of title.
-    char * type[20];
-    //The primary title.
-    //Assuming titles won't run past 200 characters...
-    char * titleP [200];
-    //Original title.
-    char * titleO [200];
-    //0 for isn't, 1 for is.
-    int isAdult;
-    //Year the title started.
-    int startYear;
-    //Year the title ended.
-    int endYear;
-    //Runtime in minutes.
-    int runtime;
-    //Genre of the title.
-    char * genre [40];
-};
 
 struct mNode {
     //Attributes for AVL tree.
@@ -44,11 +22,6 @@ struct mNode {
     int weight;
     struct mNodeData *data;
 };
-
-
-
-struct  mNode topNode;
-struct  User firstUser;
 
 int addUser(struct User user)
 {
@@ -60,48 +33,50 @@ void refreshUsers ()
     
     
 }
-struct mNodeData extractData(char * movieString)
+struct mNodeData extractData(char movieString [] )
 {
     
     //Database ID of the title.
-    int ID = -1 ;
-    //Type of title.
-    char type [20];
-    //The primary title.
-    char titleP [200];
-    //Original title.
-    char  titleO [200];
-    //0 for isn't, 1 for is.
-    int isAdult =-1;
-    //Year the title started.
-    int startYear = -1;
-    //Year the title ended.
-    int endYear = -1;
-    //Runtime in minutes.
-    int runtime =-1;
-    //Genre of the title.
-    char genre[40];
-    
-    char * token;
-    token = strtok(movieString, "\t");
+    struct mNodeData temp;
+    char delim = '\t';
+    int j=0;
+    long entryLength = strlen(movieString);
     //Using a for loop to tell what part of the entry we are on.
-    for (int i = 0; i < 10; i++ )
+    for (int i = 0; i < 9; i++ )
     {
-        token = strtok(NULL, "\t");
-        
+        char token [entryLength];
+        int sep =0;
+        while (j < entryLength && movieString[j] != delim)
+        {
+            token[sep] = movieString[j];
+            j++;
+            sep++;
+        }
+        token [sep] = '\0';
+        j++;
+        printf("%s", token);
         switch (i){
-    case 1: ID = atoi (token);
-    case 2: strcpy(type, token);
-    case 3: strcpy(titleP, token);
-    case 4: strcpy(titleO, token);
-    case 5: isAdult = atoi (token);
-    case 6: startYear = atoi(token);
-    case 7: endYear = atoi (token);
-    case 8: runtime = atoi (token);
-    case 9: strcpy(genre, token);
+            case 0: temp.ID = atoi (token);
+                break;
+            case 1: strcpy(temp.type, token);
+                break;
+            case 2: strcpy(temp.titleP, token);
+                break;
+            case 3: strcpy(temp.titleO, token);
+                break;
+            case 4: temp.isAdult = atoi (token);
+                break;
+            case 5: temp.startYear = atoi(token);
+                break;
+            case 6: temp.endYear = atoi (token);
+                break;
+            case 7: temp.runtime = atoi (token);
+                break;
+            case 8: strcpy(temp.genre, token);
+                break;
         }
     }
-    struct mNodeData temp = { ID, type, titleP, titleO, isAdult, startYear, endYear, runtime, genre };
+    
     
     return temp;
 }
