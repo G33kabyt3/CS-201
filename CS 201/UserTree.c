@@ -1,19 +1,17 @@
 //
-//  MovieTree.c
+//  UserTree.c
 //  CS 201
 //
 //  Created by Trapper Ross on 3/17/19.
 //  Copyright © 2019 Trapper Ross. All rights reserved.
 //
-
-#include "MovieTree.h"
+#include <string.h>
+#include "UserTree.h"
 
 /*
  * All code below is taken and/or modified from the URL: https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
  * Data Structure is an AVL tree if it wasn't apparent.
- * Same structure from same source used in other files.
  */
-
 // C program to insert a node in AVL tree
 #include<stdio.h>
 #include<stdlib.h>
@@ -21,7 +19,7 @@
 // An AVL tree node
 struct Node
 {
-    struct mNodeData key;
+    struct User key;
     struct Node *left;
     struct Node *right;
     int height;
@@ -46,7 +44,7 @@ int max(int a, int b)
 
 /* Helper function that allocates a new node with the given key and
  NULL left and right pointers. */
-struct Node* newNode(struct mNodeData key)
+struct Node* newNode(struct User key)
 {
     struct Node* node = (struct Node*)
     malloc(sizeof(struct Node));
@@ -154,6 +152,5 @@ struct Node* insert(struct Node* node, int key)
     
     /* return the (unchanged) node pointer */
     return node;
-} 
-
+}
 
