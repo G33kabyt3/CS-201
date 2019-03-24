@@ -1,11 +1,10 @@
 //
-//  MovieTree.c
+//  CatalogTree.c
 //  CS 201
 //
 //  Created by Trapper Ross on 3/17/19.
 //  Copyright © 2019 Trapper Ross. All rights reserved.
 //
-
 #include <string.h>
 #include "CatalogTree.h"
 #include "MovieTree.h"
@@ -107,7 +106,7 @@ int getBalance(struct Node *N)
 // with node and returns the new root of the subtree.
 struct Node* insert(struct Node* node, struct mNodeData key)
 {
-    int priority = strcmp(key.titleP, node->key.titleP);
+   int priority = strcmp(key.titleP, node->key.titleP);
     /* 1.  Perform the normal BST insertion */
     if (node == NULL)
         return(newNode(key));

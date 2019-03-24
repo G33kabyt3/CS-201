@@ -5,10 +5,11 @@
 //  Created by Trapper Ross on 2/27/19.
 //  Copyright © 2019 Trapper Ross. All rights reserved.
 //
-
+// Kinda just merged the database and control classes together
 #include "Control.h"
 #include "Database.h"
 #include "UserList.h"
+struct User* topUser;
 struct User* currentUser = NULL;
 struct stringLList defaultList;
 
