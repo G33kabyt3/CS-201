@@ -21,7 +21,7 @@ int logInC(char[], char []);
 void logOutC(void);
 int addToCatalogC(void);
 int deleteFromCatalogC(void);
-struct stringLList displayCatalogC(void);
+void displayCatalogC(void);
 struct stringLList searchForTitleC(void);
 
 

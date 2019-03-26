@@ -15,10 +15,6 @@
 //  Created by Trapper Ross on 3/17/19.
 //  Copyright © 2019 Trapper Ross. All rights reserved.
 //
-
-#ifndef MovieTree_h
-#define MovieTree_h
-
 #include <stdio.h>
 
 struct cNodeData
@@ -42,6 +38,11 @@ struct cNodeData
     int runtime;
     //Genre of the title.
     char genre [40];
+    //Media Type. 0 for digital, 1 for DVD, 2 for blueray.
+    int mediaType;
+    //Data aquired in format MM/DD/YYYY. The digits are stored in the array.
+    char date[9];
+    
 };
 
 struct cNode
@@ -54,7 +55,4 @@ struct cNode
 
 struct cNode* newCNode(struct cNodeData key);
 struct cNode* insertC(struct cNode* cNode, struct cNodeData key);
-#endif /* MovieTree_h */
-
-#include <stdio.h>
 #endif /* CatalogTree_h */

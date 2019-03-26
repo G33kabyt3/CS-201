@@ -1,3 +1,4 @@
+
 //
 //  CatalogTree.c
 //  CS 201
@@ -5,32 +6,23 @@
 //  Created by Trapper Ross on 3/17/19.
 //  Copyright © 2019 Trapper Ross. All rights reserved.
 //
+
 #include <string.h>
 #include "CatalogTree.h"
-#include "MovieTree.h"
 
 /*
  * All code below is taken and/or modified from the URL: https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
  * Data Structure is an AVL tree if it wasn't apparent.
  */
-// C program to insert a node in AVL tree
+// C program to insert a cNode in AVL tree
 #include<stdio.h>
 #include<stdlib.h>
 
-// An AVL tree node
-struct Node
-{
-    struct mNodeData key;
-    struct Node *left;
-    struct Node *right;
-    int height;
-};
-
 // A utility function to get maximum of two integers
-int max(int a, int b);
+int maxC(int a, int b);
 
 // A utility function to get the height of the tree
-int height(struct Node *N)
+int heightC(struct cNode *N)
 {
     if (N == NULL)
         return 0;
@@ -38,38 +30,38 @@ int height(struct Node *N)
 }
 
 // A utility function to get maximum of two integers
-int max(int a, int b)
+int maxC(int a, int b)
 {
     return (a > b)? a : b;
 }
 
-/* Helper function that allocates a new node with the given key and
+/* Helper function that allocates a new cNode with the given key and
  NULL left and right pointers. */
-struct Node* newNode(struct mNodeData key)
+struct cNode* newCNode(struct cNodeData key)
 {
-    struct Node* node = (struct Node*)
-    malloc(sizeof(struct Node));
-    node->key   = key;
-    node->left   = NULL;
-    node->right  = NULL;
-    node->height = 1;  // new node is initially added at leaf
-    return(node);
+    struct cNode* cNode = (struct cNode*)
+    malloc(sizeof(struct cNode));
+    cNode->key   = key;
+    cNode->left   = NULL;
+    cNode->right  = NULL;
+    cNode->height = 1;  // new cNode is initially added at leaf
+    return(cNode);
 }
 
 // A utility function to right rotate subtree rooted with y
 // See the diagram given above.
-struct Node *rightRotate(struct Node *y)
+struct cNode *rightRotateC(struct cNode *y)
 {
-    struct Node *x = y->left;
-    struct Node *T2 = x->right;
+    struct cNode *x = y->left;
+    struct cNode *T2 = x->right;
     
     // Perform rotation
     x->right = y;
     y->left = T2;
     
     // Update heights
-    y->height = max(height(y->left), height(y->right))+1;
-    x->height = max(height(x->left), height(x->right))+1;
+    y->height = maxC(heightC(y->left), heightC(y->right))+1;
+    x->height = maxC(heightC(x->left), heightC(x->right))+1;
     
     // Return new root
     return x;
@@ -77,82 +69,82 @@ struct Node *rightRotate(struct Node *y)
 
 // A utility function to left rotate subtree rooted with x
 // See the diagram given above.
-struct Node *leftRotate(struct Node *x)
+struct cNode *leftRotateC(struct cNode *x)
 {
-    struct Node *y = x->right;
-    struct Node *T2 = y->left;
+    struct cNode *y = x->right;
+    struct cNode *T2 = y->left;
     
     // Perform rotation
     y->left = x;
     x->right = T2;
     
     //  Update heights
-    x->height = max(height(x->left), height(x->right))+1;
-    y->height = max(height(y->left), height(y->right))+1;
+    x->height = maxC(heightC(x->left), heightC(x->right))+1;
+    y->height = maxC(heightC(y->left), heightC(y->right))+1;
     
     // Return new root
     return y;
 }
 
-// Get Balance factor of node N
-int getBalance(struct Node *N)
+// Get Balance factor of cNode N
+int getBalanceC(struct cNode *N)
 {
     if (N == NULL)
         return 0;
-    return height(N->left) - height(N->right);
+    return heightC(N->left) - heightC(N->right);
 }
 
 // Recursive function to insert a key in the subtree rooted
-// with node and returns the new root of the subtree.
-struct Node* insert(struct Node* node, struct mNodeData key)
+// with cNode and returns the new root of the subtree.
+struct cNode* insertC(struct cNode* cNode, struct cNodeData key)
 {
-   int priority = strcmp(key.titleP, node->key.titleP);
+    
     /* 1.  Perform the normal BST insertion */
-    if (node == NULL)
-        return(newNode(key));
-    
+    if (cNode == NULL)
+        return(newCNode(key));
+    int priority = strcmp(key.titleP, cNode->key.titleP);
     if ( priority < 0)
-        node->left  = insert(node->left, key);
+        cNode->left  = insertC(cNode->left, key);
     else if (priority > 0)
-        node->right = insert(node->right, key);
+        cNode->right = insertC(cNode->right, key);
     else // Equal keys are not allowed in BST
-        return node;
+        return cNode;
     
-    /* 2. Update height of this ancestor node */
-    node->height = 1 + max(height(node->left),
-                           height(node->right));
+    /* 2. Update height of this ancestor cNode */
+    cNode->height = 1 + maxC(heightC(cNode->left),
+                            heightC(cNode->right));
     
     /* 3. Get the balance factor of this ancestor
-     node to check whether this node became
+     cNode to check whether this cNode became
      unbalanced */
-    int balance = getBalance(node);
+    int balance = getBalanceC(cNode);
     
-    // If this node becomes unbalanced, then
+    // If this cNode becomes unbalanced, then
     // there are 4 cases
     
     // Left Left Case
-    if (balance > 1 && strcmp(key.titleP, node-> left -> key.titleP)< 0)
-        return rightRotate(node);
+    if (balance > 1 && strcmp(key.titleP, cNode-> left -> key.titleP)< 0)
+        return rightRotateC(cNode);
     
     // Right Right Case
-    if (balance < -1 && strcmp(key.titleP, node-> right -> key.titleP) > 0)
-        return leftRotate(node);
+    if (balance < -1 && strcmp(key.titleP, cNode-> right -> key.titleP) > 0)
+        return leftRotateC(cNode);
     
     // Left Right Case
-    if (balance > 1 &&strcmp(key.titleP, node-> left -> key.titleP)> 0)
+    if (balance > 1 &&strcmp(key.titleP, cNode-> left -> key.titleP)> 0)
     {
-        node->left =  leftRotate(node->left);
-        return rightRotate(node);
+        cNode->left =  leftRotateC(cNode->left);
+        return rightRotateC(cNode);
     }
     
     // Right Left Case
-    if (balance < -1 && strcmp(key.titleP, node-> right -> key.titleP)< 0)
+    if (balance < -1 && strcmp(key.titleP, cNode-> right -> key.titleP)< 0)
     {
-        node->right = rightRotate(node->right);
-        return leftRotate(node);
+        cNode->right = rightRotateC(cNode->right);
+        return leftRotateC(cNode);
     }
     
-    /* return the (unchanged) node pointer */
-    return node;
+    /* return the (unchanged) cNode pointer */
+    return cNode;
 }
 

@@ -10,8 +10,10 @@
 #define Database_h
 
 #include <stdio.h>
-#include "UserTree.h"
-
+#include "MovieTree.h"
+#include "CatalogTree.h"
+struct mNode* mRoot;
+struct cNode* cRoot;
 struct MovieList{
     
 };
@@ -21,7 +23,8 @@ struct MovieList{
 void refreshUsers(void);
 void bootDatabase(void);
 void closeDatabase(void);
-struct mNodeData extractData(char movieString[]);
+struct mNodeData extractMData(char movieString[]);
+struct cNodeData extractCData(char movieString[]);
 int sampleFunction(void);
 int createUser(char username[50]);
 int chooseUser(char username[50]);

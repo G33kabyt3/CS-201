@@ -7,8 +7,9 @@
 //
 
 #include <string.h>
-#include "CatalogTree.h"
 #include "MovieTree.h"
+#include "CatalogTree.h"
+
 
 /*
  * All code below is taken and/or modified from the URL: https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
