@@ -9,19 +9,18 @@
 #include <stdio.h>
 #include "Interface201.h"
 #include "Database.h"
-#include "UserList.h"
+#include "UserTree.h"
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    printf("Hello, World!\n");
-    //bootDatabase();
+    bootDatabase();
+    closeDatabase();
    // char string [] = "0000014 \t short \t The Sprinkler Sprinkled \t L'arroseur arrosé \t 0 \t 1895 \t 0 \t 1 \t Comedy,Short";
     //extractData(string);
     //bootInterface();
-    addUserUL("a", "a");
-    addUserUL("b", "b");
-    addUserUL("1", "1");
-    printUsers();
+   // addUserUL("a", "a");
+   // addUserUL("b", "b");
+    //addUserUL("1", "1");
    
     return 0;
 }

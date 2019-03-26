@@ -14,24 +14,15 @@
  * All code below is taken and/or modified from the URL: https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
  * Data Structure is an AVL tree if it wasn't apparent.
  */
-// C program to insert a node in AVL tree
+// C program to insert a mNode in AVL tree
 #include<stdio.h>
 #include<stdlib.h>
-
-// An AVL tree node
-struct Node
-{
-    struct mNodeData key;
-    struct Node *left;
-    struct Node *right;
-    int height;
-};
 
 // A utility function to get maximum of two integers
 int max(int a, int b);
 
 // A utility function to get the height of the tree
-int height(struct Node *N)
+int height(struct mNode *N)
 {
     if (N == NULL)
         return 0;
@@ -44,25 +35,25 @@ int max(int a, int b)
     return (a > b)? a : b;
 }
 
-/* Helper function that allocates a new node with the given key and
+/* Helper function that allocates a new mNode with the given key and
  NULL left and right pointers. */
-struct Node* newNode(struct mNodeData key)
+struct mNode* newmNode(struct mNodeData key)
 {
-    struct Node* node = (struct Node*)
-    malloc(sizeof(struct Node));
-    node->key   = key;
-    node->left   = NULL;
-    node->right  = NULL;
-    node->height = 1;  // new node is initially added at leaf
-    return(node);
+    struct mNode* mNode = (struct mNode*)
+    malloc(sizeof(struct mNode));
+    mNode->key   = key;
+    mNode->left   = NULL;
+    mNode->right  = NULL;
+    mNode->height = 1;  // new mNode is initially added at leaf
+    return(mNode);
 }
 
 // A utility function to right rotate subtree rooted with y
 // See the diagram given above.
-struct Node *rightRotate(struct Node *y)
+struct mNode *rightRotate(struct mNode *y)
 {
-    struct Node *x = y->left;
-    struct Node *T2 = x->right;
+    struct mNode *x = y->left;
+    struct mNode *T2 = x->right;
     
     // Perform rotation
     x->right = y;
@@ -78,10 +69,10 @@ struct Node *rightRotate(struct Node *y)
 
 // A utility function to left rotate subtree rooted with x
 // See the diagram given above.
-struct Node *leftRotate(struct Node *x)
+struct mNode *leftRotate(struct mNode *x)
 {
-    struct Node *y = x->right;
-    struct Node *T2 = y->left;
+    struct mNode *y = x->right;
+    struct mNode *T2 = y->left;
     
     // Perform rotation
     y->left = x;
@@ -95,8 +86,8 @@ struct Node *leftRotate(struct Node *x)
     return y;
 }
 
-// Get Balance factor of node N
-int getBalance(struct Node *N)
+// Get Balance factor of mNode N
+int getBalance(struct mNode *N)
 {
     if (N == NULL)
         return 0;
@@ -104,56 +95,56 @@ int getBalance(struct Node *N)
 }
 
 // Recursive function to insert a key in the subtree rooted
-// with node and returns the new root of the subtree.
-struct Node* insert(struct Node* node, struct mNodeData key)
+// with mNode and returns the new root of the subtree.
+struct mNode* insert(struct mNode* mNode, struct mNodeData key)
 {
-    int priority = strcmp(key.titleP, node->key.titleP);
+   
     /* 1.  Perform the normal BST insertion */
-    if (node == NULL)
-        return(newNode(key));
-    
+    if (mNode == NULL)
+        return(newmNode(key));
+    int priority = strcmp(key.titleP, mNode->key.titleP);
     if ( priority < 0)
-        node->left  = insert(node->left, key);
+        mNode->left  = insert(mNode->left, key);
     else if (priority > 0)
-        node->right = insert(node->right, key);
+        mNode->right = insert(mNode->right, key);
     else // Equal keys are not allowed in BST
-        return node;
+        return mNode;
     
-    /* 2. Update height of this ancestor node */
-    node->height = 1 + max(height(node->left),
-                           height(node->right));
+    /* 2. Update height of this ancestor mNode */
+    mNode->height = 1 + max(height(mNode->left),
+                           height(mNode->right));
     
     /* 3. Get the balance factor of this ancestor
-     node to check whether this node became
+     mNode to check whether this mNode became
      unbalanced */
-    int balance = getBalance(node);
+    int balance = getBalance(mNode);
     
-    // If this node becomes unbalanced, then
+    // If this mNode becomes unbalanced, then
     // there are 4 cases
     
     // Left Left Case
-    if (balance > 1 && strcmp(key.titleP, node-> left -> key.titleP)< 0)
-        return rightRotate(node);
+    if (balance > 1 && strcmp(key.titleP, mNode-> left -> key.titleP)< 0)
+        return rightRotate(mNode);
     
     // Right Right Case
-    if (balance < -1 && strcmp(key.titleP, node-> right -> key.titleP) > 0)
-        return leftRotate(node);
+    if (balance < -1 && strcmp(key.titleP, mNode-> right -> key.titleP) > 0)
+        return leftRotate(mNode);
     
     // Left Right Case
-    if (balance > 1 &&strcmp(key.titleP, node-> left -> key.titleP)> 0)
+    if (balance > 1 &&strcmp(key.titleP, mNode-> left -> key.titleP)> 0)
     {
-        node->left =  leftRotate(node->left);
-        return rightRotate(node);
+        mNode->left =  leftRotate(mNode->left);
+        return rightRotate(mNode);
     }
     
     // Right Left Case
-    if (balance < -1 && strcmp(key.titleP, node-> right -> key.titleP)< 0)
+    if (balance < -1 && strcmp(key.titleP, mNode-> right -> key.titleP)< 0)
     {
-        node->right = rightRotate(node->right);
-        return leftRotate(node);
+        mNode->right = rightRotate(mNode->right);
+        return leftRotate(mNode);
     }
     
-    /* return the (unchanged) node pointer */
-    return node;
+    /* return the (unchanged) mNode pointer */
+    return mNode;
 }
 

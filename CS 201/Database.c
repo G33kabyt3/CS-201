@@ -12,23 +12,87 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <fcntl.h>
 #include "MovieTree.h"
-#include "UserList.h"
+#include "UserTree.h"
+#include <dirent.h>
 FILE* userFile;
 FILE* movieFile;
+struct mNode* mRoot;
+struct UNode* uRoot;
 
-
-
-int addUser(struct User user)
-{
-    return 1;
-}
 
 void refreshUsers ()
 {
     
     
 }
+/*
+ * Creation, selections, printing of users.
+ *
+ */
+
+// Takes a username, creates a file for it.
+int createUser(char username[50])
+{
+    //Path shouldn't be more than 75 due to the fact the functions take an array of size 50.
+    char path [75] = "UserData/";
+    strcat(path, username);
+    strcat(path, ".log");
+    userFile = fopen(path, "r");
+    if (userFile != NULL)
+    {
+        printf("User already exists!\n");
+        return 0;
+    }
+    userFile = fopen(path, "w+");
+    if (userFile == NULL)
+    {
+        printf("User file not found!\n");
+        return 0;
+    }
+    return 1;
+}
+
+// Takes a username, sets the current user file to that user.
+int chooseUser(char username[50])
+{
+    char path [75] = "UserData/";
+    strcat(path, username);
+    strcat(path, ".log");
+    userFile = fopen(path, "r+");
+    if (userFile == NULL)
+    {
+        printf("User file not found!\n");
+        return 0;
+    }
+    return 1;
+}
+
+int printUsers ()
+{
+    struct dirent *subdir;
+    DIR *dir;
+    dir = opendir("./UserData");
+    if (dir)
+    {
+        subdir = readdir(dir);
+        subdir = readdir(dir);
+        while ((subdir = readdir(dir)) != NULL)
+        {
+            printf("%s\n", subdir->d_name);
+        }
+        closedir(dir);
+    }
+    return(0);
+}
+
+
+
+
+
+
+
 struct mNodeData extractData(char movieString [] )
 {
     
@@ -50,25 +114,36 @@ struct mNodeData extractData(char movieString [] )
         }
         token [sep] = '\0';
         j++;
-        printf("%s", token);
         switch (i){
-            case 0: temp.ID = atoi (token);
+            case 0:
+                memmove(&token[0], &token[1], strlen(token));
+                memmove(&token[0], &token[1], strlen(token));
+                printf("%s ", token);
+                temp.ID = atoi (token);
                 break;
-            case 1: strcpy(temp.type, token);
+                case 1: strcpy(temp.type, token);
+                printf("%s ", token);
                 break;
             case 2: strcpy(temp.titleP, token);
+                printf("%s ", token);
                 break;
             case 3: strcpy(temp.titleO, token);
+                printf("%s ", token);
                 break;
             case 4: temp.isAdult = atoi (token);
+                printf("%s ", token);
                 break;
             case 5: temp.startYear = atoi(token);
+                printf("%s ", token);
                 break;
             case 6: temp.endYear = atoi (token);
+                printf("%s ", token);
                 break;
             case 7: temp.runtime = atoi (token);
+                printf("%s ", token);
                 break;
             case 8: strcpy(temp.genre, token);
+                printf("%s\n", token);
                 break;
         }
     }
@@ -77,13 +152,40 @@ struct mNodeData extractData(char movieString [] )
     return temp;
 }
 
+
+
+void refreshDatabase()
+{
+    // Max length of file line to read.
+    int maxLength = 500;
+    // Temporary string variable.
+    char curLine [maxLength];
+    while (fgets(curLine, maxLength, movieFile) != NULL)
+    {
+         mRoot = insert(mRoot, extractData(curLine));
+    }
+    
+    while (fgets(curLine, maxLength, userFile))
+    {
+        
+    }
+}
+
 void bootDatabase()
 {
-    mkdir("201Data", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    userFile = fopen("201Data/userData.txt", "w+");
-    movieFile = fopen("201Data/data.tsv", "r");
+    //TODO: Make better file pathnames.
+    mkdir("MovieData", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir("UserData", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+   
+    movieFile = fopen("/Users/Theepicone1/Documents/MovieInfo.txt", "r");
+    if (movieFile == NULL)
+    {
+        printf("Movie file not found!\n");
+    }
+    //TO_DO: Uncomment.
+    //refreshDatabase();
 }
-void databaseShutdown()
+void closeDatabase()
 {
     fclose(userFile);
     fclose(movieFile);

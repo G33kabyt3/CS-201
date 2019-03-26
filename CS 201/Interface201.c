@@ -23,12 +23,11 @@ void createUserI()
     {
         printf("Please type the desired username for the new user. Please note that it may only be 20 characters long. Any overflow characters will not be considered.\n");
         getline(&username, &numBytes, stdin);
-        printf("Please type the desired password for the new user. Please note that it may only be 20 characters long. Any overflow characters will not be considered.\n");
-        getline(&password, &numBytes, stdin);
-        if (createUserC(username, password) == 0)
+        /*if (createUserC(username, password) == 0)
         {
             printf("Username taken. Please try another.\n");
         }
+         */
         
          printf("Creation Successful. \n");
         

@@ -8,14 +8,14 @@
 // Kinda just merged the database and control classes together
 #include "Control.h"
 #include "Database.h"
-#include "UserList.h"
+#include "UserTree.h"
 struct User* topUser;
 struct User* currentUser = NULL;
 struct stringLList defaultList;
 
 
 
-int createUserC(char username [], char password[])
+/*int createUserC(char username [], char password[])
 {
     int success;
     struct User tempUser = {
@@ -24,6 +24,7 @@ int createUserC(char username [], char password[])
   success = addUser(tempUser);
     return success;
 }
+ */
 
 
 

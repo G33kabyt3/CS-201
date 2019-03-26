@@ -19,9 +19,9 @@ struct mNodeData
     char type [20];
     //The primary title.
     //Assuming titles won't run past 200 characters...
-    char titleP[200];
+    char titleP[500];
     //Original title.
-    char titleO[200];
+    char titleO[500];
     //0 for isn't, 1 for is.
     int isAdult;
     //Year the title started.
@@ -34,11 +34,14 @@ struct mNodeData
     char genre [40];
 };
 
-struct mNode {
-    //Attributes for AVL tree.
-    struct mNode * left;
-    struct mNode * right;
-    int weight;
-    struct mNodeData *data;
+struct mNode
+{
+    struct mNodeData key;
+    struct mNode *left;
+    struct mNode *right;
+    int height;
 };
+
+struct mNode* newmNode(struct mNodeData key);
+struct mNode* insert(struct mNode* mNode, struct mNodeData key);
 #endif /* MovieTree_h */

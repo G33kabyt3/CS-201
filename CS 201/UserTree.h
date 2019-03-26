@@ -10,5 +10,11 @@
 #define UserTree_h
 
 #include <stdio.h>
-
+struct UNode
+{
+    char key [100];
+    struct UNode *left;
+    struct UNode *right;
+    int height;
+};
 #endif /* UserTree_h */

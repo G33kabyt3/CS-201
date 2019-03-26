@@ -10,7 +10,7 @@
 #define Database_h
 
 #include <stdio.h>
-#include "UserList.h"
+#include "UserTree.h"
 
 struct MovieList{
     
@@ -20,6 +20,10 @@ struct MovieList{
 
 void refreshUsers(void);
 void bootDatabase(void);
+void closeDatabase(void);
 struct mNodeData extractData(char movieString[]);
-int addUser(struct User);
+int sampleFunction(void);
+int createUser(char username[50]);
+int chooseUser(char username[50]);
+int printUsers(void);
 #endif /* Database_h */
