@@ -11,22 +11,19 @@
 
 #include <stdio.h>
 #include "MovieTree.h"
-#include "CatalogTree.h"
-struct mNode* mRoot;
-struct cNode* cRoot;
-struct MovieList{
-    
-};
 
-
+void testPrint(void);
 
 void refreshUsers(void);
 void bootDatabase(void);
 void closeDatabase(void);
-struct mNodeData extractMData(char movieString[]);
-struct cNodeData extractCData(char movieString[]);
 int sampleFunction(void);
 int createUser(char username[50]);
 int chooseUser(char username[50]);
 int printUsers(void);
+void logOutUser(void);
+struct mNode* getMRoot(void);
+struct cNode* getCRoot(void);
+char * Trimmer(char*);
+
 #endif /* Database_h */

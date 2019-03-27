@@ -11,37 +11,38 @@
 
 #include <stdio.h>
 
-struct mNodeData
-{
-    //Database ID of the title.
-    int ID;
-    //Type of title.
-    char type [20];
-    //The primary title.
-    //Assuming titles won't run past 200 characters...
-    char titleP[500];
-    //Original title.
-    char titleO[500];
-    //0 for isn't, 1 for is.
-    int isAdult;
-    //Year the title started.
-    int startYear;
-    //Year the title ended.
-    int endYear;
-    //Runtime in minutes.
-    int runtime;
-    //Genre of the title.
-    char genre [40];
+
+
+
+typedef struct Tree *Tree;
+
+typedef struct Node *Node;
+struct Node {
+    Node parent;
+    Node left;
+    Node right;
+    void *data;
+    int balance;
+};
+struct Tree {
+    Node root;
+    int (*comp) (void *, void *);
+    void (*print) (void *);
 };
 
-struct mNode
-{
-    struct mNodeData key;
-    struct mNode *left;
-    struct mNode *right;
-    int height;
-};
+Tree  Tree_New        (int (*comp)(void *, void *), void (*print)(void *));
 
-struct mNode* newmNode(struct mNodeData key);
-struct mNode* insert(struct mNode* mNode, struct mNodeData key);
+void  Tree_Insert     (Tree t, void *data);
+void  Tree_DeleteNode (Tree t, Node  node);
+Node  Tree_SearchNode (Tree t, void *data);
+
+Node  Tree_FirstNode  (Tree t);
+Node  Tree_LastNode   (Tree t);
+
+Node  Tree_PrevNode   (Tree t, Node n);
+Node  Tree_NextNode   (Tree t, Node n);
+
+void  Tree_Print      (Tree t);
+
+void *Node_GetData (Node n);
 #endif /* MovieTree_h */

@@ -7,53 +7,46 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
-#include<string.h>
+#include <string.h>
 #include "Interface201.h"
 #include "Control.h"
+
+/*
+ *
+ * User Functions
+ *
+ */
+
 void createUserI()
 {
-    unsigned long numBytes = 20;
     
-    char *username;
-    username = (char *) malloc (numBytes+1);
-    char *password;
-    password = (char *) malloc (numBytes+1);
+    
+    char username[20];
     int success =0;
     while (success!= 1)
     {
         printf("Please type the desired username for the new user. Please note that it may only be 20 characters long. Any overflow characters will not be considered.\n");
-        getline(&username, &numBytes, stdin);
-        /*if (createUserC(username, password) == 0)
+        scanf("%20s", username);
+        success = createUserC(username);
+        if (success == 0)
         {
             printf("Username taken. Please try another.\n");
         }
-         */
-        
-         printf("Creation Successful. \n");
         
     }
-    
-    free(username);
-    free(password);
+    printf("Creation Successful. \n");
 }
 
 int logInI()
 {
-    unsigned long numBytes = 20;
-    char *username;
-    username = (char *) malloc (numBytes+1);
-    char *password;
-    password = (char *) malloc (numBytes+1);
-    
-    printf("Please type in your username.\n");
-    getline(&username, &numBytes, stdin);
-    printf("Please type the your password.\n");
-    getline(&password, &numBytes, stdin);
-    if ( logInC(username, password)==0)
+    char username[20];
+    printf("Printing user files...\n");
+    printUsersI();
+    printf("Please type in the name of the user file you wish to access (Just the name, not the .log).\n");
+    scanf("%20s", username);
+    if (logInC(username)==0)
     {
         printf("Incorrect log in information. Please try again later.\n");
-        free(username);
-        free(password);
         return 0;
     }
     return 1;
@@ -69,9 +62,20 @@ void logOutI()
 void deleteUserI()
 {
     deleteUserC();
-    printf("Delete successful.");
+    printf("Delete successful.\n");
 }
 
+//Wrapper for control print users.
+void printUsersI(){
+    printUsersC();
+}
+
+
+/*
+ *
+ * Catalog Functions
+ *
+ */
 void addToCatalogI()
 {
     
@@ -82,14 +86,10 @@ void deleteFromCatalogI()
     
 }
 
+//Displays all movies in the catalog. Must have catalog loaded into memory first.
 void displayCatalogI()
 {
-   struct stringLList temp = displayCatalogC();
-    while(temp.nxt != NULL)
-    {
-        printf("%s\n", temp.data);
-    }
-    printf("Catalog displayed.\n");
+    //displayCatalogC();
 }
 
 void searchForTitleI()
@@ -98,7 +98,11 @@ void searchForTitleI()
 }
 
 
-
+/*
+ *
+ * Main Menus
+ *
+ */
 
 void mainMenu()
 {

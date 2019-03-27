@@ -17,6 +17,8 @@ void logOutI(void);
 
 void deleteUserI(void);
 
+void printUsersI(void);
+
 void addToCatalogI(void);
 
 void deleteFromCatalogI(void);

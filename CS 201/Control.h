@@ -10,18 +10,17 @@
 #define Control_h
 
 #include <stdio.h>
-struct stringLList
-{
-    char data[100];
-    struct stringLList * nxt;
-};
-int createUserC(char[], char []);
+
+int createUserC(char[]);
 int deleteUserC(void);
-int logInC(char[], char []);
+void printUsersC(void);
+int logInC(char[]);
 void logOutC(void);
+
 int addToCatalogC(void);
 int deleteFromCatalogC(void);
 void displayCatalogC(void);
+
 struct stringLList searchForTitleC(void);
 
 

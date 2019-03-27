@@ -14,14 +14,16 @@
 int main(int argc, const char * argv[]) {
     // insert code here...
    // char string [] = "0000014 \t short \t The Sprinkler Sprinkled \t L'arroseur arrosé \t 0 \t 1895 \t 0 \t 1 \t Comedy,Short";
-    char string [] = "0000010\tshort\tExiting the Factory\tLa sortie de l'usine Lumière à Lyon\t0\t1895\t\N\t1\tDocumentary,Short\t1\t11112011";
+   // char string [] = "0000010\tshort\tExiting the Factory\tLa sortie de l'usine Lumière à Lyon\t0\t1895\t\N\t1\tDocumentary,Short\t1\t11112011";
     //extractData(string);
     //bootInterface();
    // addUserUL("a", "a");
    // addUserUL("b", "b");
     //addUserUL("1", "1");
     //extractCData("0000010\tshort\tExiting the Factory\tLa sortie de l'usine Lumière à Lyon\t0\t1895\t\N\t1\tDocumentary,Short\t1\t11112011");
-    extractCData(string);
+    //extractCData(string);
+    bootDatabase();
+    closeDatabase();
    
     return 0;
 }
