@@ -20,10 +20,11 @@ void printUsersC()
 {
     printUsers();
 }
-
-int deleteUserC()
+//Wrapper for Database deleteUser().
+int deleteUserC(char username [50])
 {
-    return 1;
+    return deleteUser(username);
+    
 }
 
 //Wrapper function for Database chooseUser().
@@ -32,19 +33,30 @@ int logInC(char username [])
     return chooseUser(username);
 }
 
+//Wrapper for Database logOutUser().
 void logOutC()
 {
     logOutUser();
 }
 
-int addToCatalogC()
+int addToCatalogC(Stack S, int mediaType, char[9] date)
 {
     return 1;
 }
 
-int deleteFromCatalogC()
+int deleteFromCatalogC(Stack S)
 {
     return 1;
+}
+
+int searchMoviesC(char [500] name)
+{
+    
+}
+
+int editCatalog(Stack S)
+{
+    
 }
 
 /*void recursiveDisplay(struct cNode * node)

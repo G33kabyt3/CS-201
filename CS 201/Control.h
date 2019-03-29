@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 int createUserC(char[]);
-int deleteUserC(void);
+int deleteUserC(char username [50]);
 void printUsersC(void);
 int logInC(char[]);
 void logOutC(void);

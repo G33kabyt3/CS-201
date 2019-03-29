@@ -27,5 +27,6 @@ struct cNode* getCRoot(void);
 char * Trimmer(char*);
 void printSample(void);
 Stack searchMovies(char * title);
+int deleteUser(char username[50]);
 
 #endif /* Database_h */
