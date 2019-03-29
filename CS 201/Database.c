@@ -18,6 +18,11 @@
 #include <unistd.h>
 #include "MovieStack.h"
 //#include <literally_every_C_library.h>
+/*
+ * MAKE SURE YOU BOOT THE DATABASE BEFORE USING ANY OF THESE FUNCTIONS. Some of these are dependent on others.
+ * I can neither confirm nor deny its resemblence to a certain type of pasta. But that's what you get in a non-OOP langugue. (Not really, but shhhh.)
+ *
+ */
 FILE* userFile;
 FILE* movieFile;
 //Movie tree
@@ -52,8 +57,6 @@ typedef struct mNodeData
     int runtime;
     //Genre of the title.
     char genre [40];
-    //Trimmed Title.
-    char key[500];
 } *mNodeData;
 
 //Data required for catalog.
@@ -82,8 +85,6 @@ typedef struct cNodeData
     int mediaType;
     //Data aquired in format MM/DD/YYYY. The digits are stored in the array.
     char date[9];
-    //Trimmed Title.
-    char key[500];
     
 }*cNodeData;
 
@@ -122,9 +123,37 @@ int compC (void *a1, void *a2)
         return 0;
     }
 }
-int compQ(void *a1, char * string)
+int compQC(void *a1, char * string)
 {
-    return 1;
+    if( a1 == NULL)
+    {
+        return 0;
+    }
+     cNodeData nd1 = (cNodeData) a1;
+    if (strncmp(nd1->titleP, string, strlen(nd1->titleP)) <0) {
+        return -1;
+    } else if (strncmp(nd1->titleP, string, strlen(nd1->titleP)) >0) {
+        return +1;
+    } else {
+        return 0;
+    }
+}
+
+int compQM(void *a1, char * string)
+{
+    if( a1 == NULL)
+    {
+        return 0;
+    }
+    (mTree->print)(a1);
+    mNodeData nd1 = (mNodeData) a1;
+    if (strncmp(nd1->titleP, string, strlen(nd1->titleP)) <0) {
+        return -1;
+    } else if (strncmp(nd1->titleP, string, strlen(nd1->titleP)) >0) {
+        return +1;
+    } else {
+        return 0;
+    }
 }
 
 
@@ -431,7 +460,6 @@ void addMovieToCatalog(struct mNodeData data, int media, char dateArray[9])
     strncpy(temp.genre, data.genre, strlen(temp.genre));
     temp.mediaType =media;
     strncpy(temp.date, dateArray, strlen(temp.date));
-    strncpy(temp.key, data.key, strlen(temp.key));
     Tree_Insert(cTree, &temp);
 }
 
@@ -516,31 +544,32 @@ Stack searchTreeC(char *name)
 //       Returns NULL if none are found.
 //
 
-Stack Tree_Query (Tree T, char* data)
+Stack mTree_Query (Tree T, char* data)
 {
     //Stack for node data
     Stack S = Stack_New();
     Node node = T-> root;
+    (T->print)(T->root);
     //Runs down the tree searching for first match.
     while (node != NULL)
     {
-        if (compQ(node, data) <0)
+        if (compQM(node, data) <0)
         {
             node = node->left;
-        } else if (compQ(node, data)>0)
+        } else if (compQM(node, data)>0)
         {
             node = node->right;
         } else
         {
             Push(S, node->data);
             Node temp =Tree_NextNode(T, node);
-            while (compQ(temp, data) ==0)
+            while (compQM(temp, data) ==0)
             {
                 Push(S, temp);
                 temp = Tree_NextNode(T, temp);
             }
             temp = Tree_PrevNode(T, node);
-            while (compQ(temp, data) ==0)
+            while (compQM(temp, data) ==0)
             {
                 Push(S, temp);
                 temp = Tree_PrevNode(T, temp);
@@ -550,6 +579,136 @@ Stack Tree_Query (Tree T, char* data)
         }
     }
     return NULL;
+}
+
+Stack cTree_Query (Tree T, char* data)
+{
+    //Stack for node data
+    Stack S = Stack_New();
+    Node node = T-> root;
+    //Runs down the tree searching for first match.
+    while (node != NULL)
+    {
+        if (compQC(node, data) <0)
+        {
+            node = node->left;
+        } else if (compQC(node, data)>0)
+        {
+            node = node->right;
+        } else
+        {
+            Push(S, node->data);
+            Node temp =Tree_NextNode(T, node);
+            while (compQC(temp, data) ==0)
+            {
+                Push(S, temp);
+                temp = Tree_NextNode(T, temp);
+            }
+            temp = Tree_PrevNode(T, node);
+            while (compQC(temp, data) ==0)
+            {
+                Push(S, temp);
+                temp = Tree_PrevNode(T, temp);
+            }
+            //Call recursive function on both children to scan for matches.
+            return S;
+        }
+    }
+    return NULL;
+}
+
+// Search functions. I gave it a think and I came to the conclution that conducting four seperate searches for the title,
+//,one if it already begins with an article, is the best way to go. Altering tree nodes in any way will lose me time and space, as I'll have to perform the opperations to store an article-less name.
+// Searching for A title by keyword just wouldn't work with the tree alone. This seemed like the best solution.
+Stack searchMovies(char* title)
+{
+    Stack S = Stack_New();
+     //Longest title is 196 characters, + 1 null space = 197, so the maximum length the arrays should need to be is...
+    char title_A [197+2];
+    char title_THE [197+4];
+    char title_AN [197+3];
+    //If the user SPECIFICALLY CHOOSES to begin their search with an article, they clearly wanted it there. So we keep the title.
+    if (strncmp(title,"The ", strlen("The ")) || strncmp(title,"A ", strlen("A ")) || strncmp(title,"An ", strlen("An ")) == 0)
+    {
+        Stack temp =mTree_Query(mTree, title);
+        return temp;
+    } else {
+        strcat(title_A, "A ");
+        strcat(title_AN, "An ");
+        strcat(title_THE,"The " );
+        //This, on the otherhand... best to be safe.
+        strncat(title_A, title, strlen(title_A));
+        strncat(title_THE, title, strlen(title_A));
+        strncat(title_AN, title, strlen(title_A));
+        // Get the stacks of the result of each...
+        Stack temp =mTree_Query(mTree, title);
+        Stack temp_A = Stack_New();
+        Stack temp_THE = Stack_New();
+        Stack temp_AN = Stack_New();
+        temp_A = mTree_Query(mTree, title_A);
+        temp_THE = mTree_Query(mTree, title_THE);
+        temp_AN = mTree_Query(mTree, title_AN);
+        
+        while(Peek(temp_A)!= NULL)
+        {
+            Push(temp, Pop(temp_A));
+        }
+        while(Peek(temp_THE)!= NULL)
+        {
+            Push(temp, Pop(temp_THE));
+        }
+        while(Peek(temp_AN)!= NULL)
+        {
+            Push(temp, Pop(temp_AN));
+        }
+    }
+    return S;
+}
+Stack searchCatalog(char* title)
+{
+    Stack S = Stack_New();
+    //Longest title is 196 characters, + 1 null space = 197, so the maximum length the arrays should need to be is...
+    char title_A [197+2];
+    char title_THE [197+4];
+    char title_AN [197+3];
+    //If the user SPECIFICALLY CHOOSES to begin their search with an article, they clearly wanted it there. So we keep the title.
+    if (strncmp(title,"The ", strlen("The ")) || strncmp(title,"A ", strlen("A ")) || strncmp(title,"An ", strlen("An ")) == 0)
+    {
+        Stack temp =cTree_Query(cTree, title);
+        return temp;
+        //If not, we check all the articles that could be at the start.
+    } else {
+        //Pointless to use strncat... we know it won't overflow.
+        strcat(title_A, "A ");
+        strcat(title_AN, "An ");
+        strcat(title_THE,"The " );
+        //This, on the otherhand... best to be safe.
+        strncat(title_A, title, strlen(title_A));
+        strncat(title_THE, title, strlen(title_A));
+        strncat(title_AN, title, strlen(title_A));
+        // Get the stacks of the result of each...
+        Stack temp =cTree_Query(cTree, title);
+        Stack temp_A = Stack_New();
+        Stack temp_THE = Stack_New();
+        Stack temp_AN = Stack_New();
+        temp_A = cTree_Query(cTree, title_A);
+        temp_THE = cTree_Query(cTree, title_THE);
+        temp_AN = cTree_Query(cTree, title_AN);
+        
+        while(Peek(temp_A)!= NULL)
+        {
+            Push(temp, Pop(temp_A));
+        }
+        while(Peek(temp_THE)!= NULL)
+        {
+            Push(temp, Pop(temp_THE));
+        }
+        while(Peek(temp_AN)!= NULL)
+        {
+            Push(temp, Pop(temp_AN));
+        }
+    }
+    return S;
 }
 //Proceedure for closing the database on exiting.
 void closeDatabase()
@@ -604,7 +763,7 @@ void bootDatabase()
 
 int StartsWith(const char *a, const char *b)
 {
-    if(strncmp(a, b, strlen(b)) == 0) return 1;
+    if(strncmp(a, b, strlen(a)) == 0) return 1;
     return 0;
 }
 
@@ -624,6 +783,7 @@ char * Trimmer(char * original)
     return original;
     
 }
+
 void printSample()
 {
     (mTree->print)(mTree->root->data);

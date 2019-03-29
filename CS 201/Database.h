@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "MovieTree.h"
+#include "MovieStack.h"
 
 void testPrint(void);
 void refreshUsers(void);
@@ -25,5 +26,6 @@ struct mNode* getMRoot(void);
 struct cNode* getCRoot(void);
 char * Trimmer(char*);
 void printSample(void);
+Stack searchMovies(char * title);
 
 #endif /* Database_h */

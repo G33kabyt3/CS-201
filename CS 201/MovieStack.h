@@ -24,6 +24,7 @@ struct Stack{
 Stack Stack_New (void);
 void* Pop(Stack T);
 void Push(Stack T, void * s);
+void* Peek(Stack T);
 
 
 #endif /* MovieStack_h */

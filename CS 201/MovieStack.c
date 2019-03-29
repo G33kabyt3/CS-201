@@ -23,10 +23,14 @@ Stack Stack_New () {
 void* Pop(Stack T)
 {
     stackNode n = T->first;
-    T->first = T->first->nxt;
-    void *data =n->data;
-    free(n);
-    return data;
+    if( n != NULL)
+    {
+        T->first = T->first->nxt;
+        void *data =n->data;
+        free(n);
+        return data;
+    }
+    return NULL;
 }
 
 void Push(Stack T, void * s)
@@ -37,4 +41,8 @@ void Push(Stack T, void * s)
     T->first = n;
     n->data = s;
     
+}
+void * Peek(Stack T)
+{
+    return T->first;
 }
