@@ -23,6 +23,7 @@ int main(int argc, const char * argv[]) {
     //extractCData("0000010\tshort\tExiting the Factory\tLa sortie de l'usine Lumière à Lyon\t0\t1895\t\N\t1\tDocumentary,Short\t1\t11112011");
     //extractCData(string);
     bootDatabase();
+    printSample();
     closeDatabase();
    
     return 0;

@@ -16,14 +16,21 @@
 #include "MovieTree.h"
 #include <dirent.h>
 #include <unistd.h>
+#include "MovieStack.h"
 //#include <literally_every_C_library.h>
 FILE* userFile;
 FILE* movieFile;
-struct mNode* mRoot;
-struct cNode* cRoot;
+//Movie tree
 Tree mTree;
+//Catalog tree
 Tree cTree;
 
+/*
+ *
+ * Required functions and structs for Movie Tree
+ *
+ */
+//Data required for movie database.
 typedef struct mNodeData
 {
     //Database ID of the title.
@@ -49,6 +56,7 @@ typedef struct mNodeData
     char key[500];
 } *mNodeData;
 
+//Data required for catalog.
 typedef struct cNodeData
 {
     //Database ID of the title.
@@ -79,31 +87,46 @@ typedef struct cNodeData
     
 }*cNodeData;
 
+//Comparison for movie data by key. Read throught the function before use.
 int compM (void *a1, void *a2)
 {
+     //This "casts" the void pointers to be type mNodeData from my understanding.
+     //This means that if this function is used for a tree that doesn't use this data, IT WILL NOT WORK!
+    //So if anybody else is using these, be careful.
     mNodeData nd1 = (mNodeData) a1;
     mNodeData nd2 = (mNodeData) a2;
-    if (nd1->key < nd2->key) {
+    //Now we compare.
+    if (strncmp(nd1->titleP, nd2->titleP, strlen(nd1->titleP)) <0) {
         return -1;
-    } else if (nd1->key > nd2->key) {
+    } else if (strncmp(nd1->titleP, nd2->titleP, strlen(nd1->titleP)) >0) {
         return +1;
     } else {
         return 0;
     }
 }
 
+//Comparison for catalog data by key. Read throught the function before use.
 int compC (void *a1, void *a2)
 {
+    //This "casts" the void pointers to be type cNodeData from my understanding.
+    //This means that if this function is used for a tree that doesn't use this data, IT WILL NOT WORK!
+    //So if anybody else is using these, be careful.
     cNodeData nd1 = (cNodeData) a1;
     cNodeData nd2 = (cNodeData) a2;
-    if (strncmp(nd1->key, nd2->key, strlen(nd2->key)) <0) {
+    //Now we compare.
+    if (strncmp(nd1->titleP, nd2->titleP, strlen(nd1->titleP)) <0) {
         return -1;
-    } else if (strncmp(nd1->key, nd2->key, strlen(nd2->key)) >0) {
+    } else if (strncmp(nd1->titleP, nd2->titleP, strlen(nd1->titleP)) >0) {
         return +1;
     } else {
         return 0;
     }
 }
+int compQ(void *a1, char * string)
+{
+    return 1;
+}
+
 
 void printM (void *a) {
     mNodeData nd = (mNodeData) a;
@@ -152,13 +175,9 @@ void printC (void *a) {
     printf("%c\n", nd->date[7]);
 }
 
-void testPrint()
-{
-    fprintf(userFile, "test");
-}
 
 /*
- * Creation, selections, printing of users.
+ * Creation, selections, printing, logout, and deletion of users.
  *
  */
 
@@ -222,6 +241,7 @@ void logOutUser()
     userFile = NULL;
 }
 
+//TO_DO: Impliment this.
 void deleteUser(char username[50])
 {
     
@@ -235,10 +255,12 @@ void deleteUser(char username[50])
 
 /*
  *
- * Extractions classes. They take a string, turn it into the appropriate data struct. They take advantage of how the data is formated to know what data
- * will end up where and how far it needs to read.
+ * Extractions functions. They take a string, turn it into the appropriate data struct. They take advantage of how the data is formated to know what data
+ * will end up where and how far it needs to read. THEY RETURNS MEMORY BLOCKS THAT NEEDS TO BE FREED!
  *
  */
+
+
 mNodeData extractMData(char movieString [] ){
     
     mNodeData temp = malloc(sizeof(struct mNodeData));
@@ -269,7 +291,7 @@ mNodeData extractMData(char movieString [] ){
                 // printf("%s ", token);
                 break;
             case 2: strcpy(temp->titleP, token);
-                // printf("%s ", token);
+                // printf("%s \n", token);
                 break;
             case 3: strcpy(temp->titleO, token);
                 // printf("%s ", token);
@@ -291,13 +313,9 @@ mNodeData extractMData(char movieString [] ){
                 break;
         }
     }
-    char * trimmed = Trimmer(temp->titleP);
-    strncpy(temp->key, trimmed, strlen(trimmed));
-    
     return temp;
 }
 
-//RETURNS MEMORY BLOCK THAT NEEDS TO BE FREED!
 cNodeData extractCData(char movieString [])
 {
     cNodeData temp = malloc(sizeof(struct cNodeData));
@@ -352,13 +370,17 @@ cNodeData extractCData(char movieString [])
                 break;
         }
     }
-    char * trimmed = Trimmer(temp->titleP);
-    strncpy(temp->key,trimmed, strlen(trimmed));
     
     return temp;
 }
 
-//Converting a node's data into a line of data in the user file and adding it to memory.
+/*
+ *
+ * Functions for loading the database into memory (The AVL tree.)
+ *
+ */
+
+//Converting a node's data into a line of data in the user file.
 int addMovieToFile(struct cNodeData data)
 {
     if (userFile == NULL)
@@ -382,6 +404,7 @@ int addMovieToFile(struct cNodeData data)
     return 1;
 }
 
+
 void loadMovies()
 {
     // Max length of file line to read.
@@ -391,10 +414,33 @@ void loadMovies()
     while (fgets(curLine, maxLength, movieFile) != NULL)
     {
         Tree_Insert(mTree, extractMData(curLine));
-        
     }
 }
 
+void addMovieToCatalog(struct mNodeData data, int media, char dateArray[9])
+{
+    struct cNodeData temp;
+    temp.ID = data.ID;
+    strncpy (temp.type, data.type, strlen(temp.type));
+    strncpy(temp.titleP, data.titleP, strlen(temp.titleP));
+    strncpy(temp.titleO, data.titleO, strlen(temp.titleP));
+    temp.isAdult = data.isAdult;
+    temp.startYear = data.startYear;
+    temp.endYear = data.endYear;
+    temp.runtime = data.runtime;
+    strncpy(temp.genre, data.genre, strlen(temp.genre));
+    temp.mediaType =media;
+    strncpy(temp.date, dateArray, strlen(temp.date));
+    strncpy(temp.key, data.key, strlen(temp.key));
+    Tree_Insert(cTree, &temp);
+}
+
+
+/*
+ *
+ *Functions for when the app closes, like saving the catalog currently in memory, and freeing the tree.
+ *
+ */
 // Recursive Function for save catalog.
 int saveCatalogR(Node node)
 {
@@ -435,19 +481,92 @@ void freeTreeR(Node node)
 //Frees the tree from memory.
 void freeTree(Tree tree)
 {
-    Node root = Tree_FirstNode(tree);
+    Node root = tree->root;
     if(root!= NULL)
     {
         freeTreeR(root->left);
         freeTreeR(root->right);
         free(root->data);
         free(root);
+        free(tree);
     }
 }
 
 
+/*Stack searchTreeM(char * name)
+{
+    Stack S = Stack_New();
+    Tree T = mTree;
+    Tree_SearchNode(T,);
+    return S;
+}
 
-//Loads current user's whole catalog into memory.
+Stack searchTreeC(char *name)
+{
+    Stack S = Stack_New();
+    Tree T = cTree;
+    return S;
+}
+ */
+
+
+//Tree_Query --
+//
+//      This one is mine, not part of the site's implementation. Queries for all nodes starting with the keyName.
+//       Returns NULL if none are found.
+//
+
+Stack Tree_Query (Tree T, char* data)
+{
+    //Stack for node data
+    Stack S = Stack_New();
+    Node node = T-> root;
+    //Runs down the tree searching for first match.
+    while (node != NULL)
+    {
+        if (compQ(node, data) <0)
+        {
+            node = node->left;
+        } else if (compQ(node, data)>0)
+        {
+            node = node->right;
+        } else
+        {
+            Push(S, node->data);
+            Node temp =Tree_NextNode(T, node);
+            while (compQ(temp, data) ==0)
+            {
+                Push(S, temp);
+                temp = Tree_NextNode(T, temp);
+            }
+            temp = Tree_PrevNode(T, node);
+            while (compQ(temp, data) ==0)
+            {
+                Push(S, temp);
+                temp = Tree_PrevNode(T, temp);
+            }
+            //Call recursive function on both children to scan for matches.
+            return S;
+        }
+    }
+    return NULL;
+}
+//Proceedure for closing the database on exiting.
+void closeDatabase()
+{
+    freeTree(mTree);
+    saveCatalog();
+    freeTree(cTree);
+    fclose(userFile);
+    fclose(movieFile);
+   
+}
+
+/*
+ *
+ * Functions for booting up the database.
+ *
+ */
 void loadCatalog()
 {
     // Max length of file line to read.
@@ -477,39 +596,18 @@ void bootDatabase()
 }
 
 
-//Proceedure for closing the database on exiting.
-void closeDatabase()
-{
-    freeTree(mTree);
-    saveCatalog();
-    freeTree(cTree);
-    fclose(userFile);
-    fclose(movieFile);
-   
-}
-
 /*
  *
- *Utility Functions
+ * Utility Functions
  *
  */
-
-//Just serve to retrieve root nodes.
-struct mNode* getMRoot()
-{
-    return mRoot;
-}
-
-struct cNode* getCRoot()
-{
-    return cRoot;
-}
 
 int StartsWith(const char *a, const char *b)
 {
     if(strncmp(a, b, strlen(b)) == 0) return 1;
     return 0;
 }
+
 char * Trimmer(char * original)
 {
     //Basically if the string starts with any of these, trim it off and return a new string without them.
@@ -525,4 +623,10 @@ char * Trimmer(char * original)
     }
     return original;
     
+}
+void printSample()
+{
+    (mTree->print)(mTree->root->data);
+    (mTree->print)(mTree->root->left->data);
+    (mTree->print)(mTree->root->right->data);
 }

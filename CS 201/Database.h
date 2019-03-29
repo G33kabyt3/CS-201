@@ -13,7 +13,6 @@
 #include "MovieTree.h"
 
 void testPrint(void);
-
 void refreshUsers(void);
 void bootDatabase(void);
 void closeDatabase(void);
@@ -25,5 +24,6 @@ void logOutUser(void);
 struct mNode* getMRoot(void);
 struct cNode* getCRoot(void);
 char * Trimmer(char*);
+void printSample(void);
 
 #endif /* Database_h */

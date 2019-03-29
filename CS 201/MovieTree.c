@@ -8,6 +8,7 @@
 
 #include <string.h>
 #include "MovieTree.h"
+#include "MovieStack.h"
 
 
 /*
@@ -49,14 +50,13 @@ void print_tree (Tree t, Node n, struct trunk *prev, int is_left);
 //     Creates a new tree using the parameters 'comp' and 'print' for
 //     comparing and printing the data in the nodes.
 //
-Tree Tree_New (int (*comp)(void *, void *), void (*print)(void *)) {
+Tree Tree_New (int (*comp)(void *, void *), void (*print)(void *) ) {
     Tree t;
     
     t = malloc (sizeof (*t));
     t->root = NULL;
     t->comp = comp;
     t->print = print;
-    
     return t;
 }
 
@@ -213,6 +213,8 @@ Node Tree_SearchNode (Tree t, void *data) {
     
     return NULL;
 }
+
+
 
 // Tree_Print --
 //
