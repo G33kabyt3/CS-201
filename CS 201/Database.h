@@ -26,8 +26,10 @@ void logOutUser(void);
 struct mNode* getMRoot(void);
 struct cNode* getCRoot(void);
 Stack searchMovies(char * title);
+Stack searchCatalog(char * title);
 void printM (void *a);
 void printC (void *a);
+void printCTree(void);
 
 int deleteC(Node n);
 int addMovieToCatalog(Node n, int media, char dateArray[9]);

@@ -23,6 +23,7 @@ int deleteFromCatalogC(Stack S, unsigned long int choice);
 int printStackM(Stack S);
 int printStackC(Stack S);
 Stack searchMoviesC(char name [201]);
+Stack searchCatalogC(char name [201]);
 
 
 

@@ -43,7 +43,7 @@ void logOutC()
 
 int addToCatalogC(Stack S, int mediaType, char date [9], unsigned long int choice)
 {
-    for(int i = 0; i< choice; i++)
+    for(int i = 0; i< choice-1; i++)
     {
         Pop(S);
     }
@@ -69,14 +69,13 @@ Stack searchMoviesC(char name [201])
    return searchMovies(name);
 }
 
-//TO_DO, implement.
-/*
+
 Stack searchCatalogC(char name [201])
 {
-    
+ return searchCatalog(name);
 }
-*/
-int editCatalog(Stack S)
+
+int editCatalogI(Stack S)
 {
     return 1;
 }
@@ -90,9 +89,9 @@ int printStackM(Stack S)
     while (n != NULL)
     {
         i++;
-        printf("%i :", i);
+        printf("#%i: ", i);
         Push(temp, n);
-        printM(n);
+        printM(n->data);
         n = Pop(S);
     }
     n = Pop(temp);
@@ -115,9 +114,9 @@ int printStackC(Stack S)
     while (n != NULL)
     {
         i++;
-        printf("%i :", i);
+        printf("#%i: ", i);
         Push(temp, n);
-        printC(n);
+        printC(n->data);
         n = Pop(S);
     }
     n = Pop(temp);
@@ -130,7 +129,10 @@ int printStackC(Stack S)
     free(temp);
     return i;
 }
-
+void displayCatalogC()
+{
+    printCTree();
+}
 
 /*void recursiveDisplay(struct cNode * node)
 {
@@ -140,15 +142,7 @@ int printStackC(Stack S)
     recursiveDisplay(node->left);
     recursiveDisplay(node->right);
 }
-void displayCatalogC()
-{
-    struct cNode* node = getCRoot();
-    if(node == NULL)
-        return;
-    printCNode(*node);
-    recursiveDisplay(node->left);
-    recursiveDisplay(node->right);
-}
+
 
 */
 /*struct stringLList searchForTitleC()

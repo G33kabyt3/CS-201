@@ -29,6 +29,8 @@ FILE* movieFile;
 Tree mTree;
 //Catalog tree
 Tree cTree;
+//File path for UserFile. Because it doesn't work. For some reason.
+char* path;
 
 /*
  *
@@ -91,15 +93,24 @@ typedef struct cNodeData
 }*cNodeData;
 
 /*
-*
-* Utility Functions
-*
-*/
+ *
+ * Utility Functions
+ *
+ */
 
 int StartsWith(const char *a, const char *b)
 {
     if(strncmp(a, b, strlen(a)) == 0) return 1;
     return 0;
+}
+
+//Takes a username and an empty pathstring.
+char * getPath(char name [51], char pathString[76] )
+{
+    strcat(pathString, "UserData/" );
+    strcat(pathString, name);
+    strcat(pathString, ".log");
+    return pathString;
 }
 
 // ONLY WORKS IF POINTER IS TO AN mNode!
@@ -163,7 +174,8 @@ int compC (void *a1, void *a2)
         } else if (nd1->ID> nd2->ID){
             return 1;
         } else{
-            return 0;
+            //Same movie being added multiple times, add to the right.
+            return 1;
         }
     }
 }
@@ -171,7 +183,7 @@ int compQC(void *a1, char * string)
 {
     if( a1 == NULL)
     {
-        return 0;
+        return -2;
     }
     cNodeData nd1 = (cNodeData) a1;
     if (strncmp(nd1->titleP, string, strlen(string)) <0) {
@@ -213,7 +225,7 @@ void printM (void *a) {
     printf("%s \n" , nd->genre);
 }
 void printC (void *a) {
-    cNodeData nd = (cNodeData) a;
+    cNodeData nd = (cNodeData)a;
     printf("%i \t" , nd->ID);
     printf("%s \t" , nd->type);
     printf("%s \t" , nd->titleP);
@@ -235,83 +247,9 @@ void printC (void *a) {
         case 3:
             printf("BluRay\t");
     }
-    printf("%s" , nd->date);
+    printf("%s\n" , nd->date);
 }
 
-
-/*
- * Creation, selections, printing, logout, and deletion of users.
- *
- */
-
-// Takes a username, creates a file for it.
-int createUser(char username[51])
-{
-    //Path shouldn't be more than 75 due to the fact the functions take an array of size 50.
-    char path [75] = "UserData/";
-    strcat(path, username);
-    strcat(path, ".log");
-    userFile = fopen(path, "r");
-    if(access(path, F_OK ) != -1) {
-        printf("User already exists!\n");
-        return 0;
-    }
-    userFile = fopen(path, "w+");
-    if (userFile == NULL)
-    {
-        printf("User file not found!\n");
-        return 0;
-    }
-    return 1;
-}
-
-// Takes a username, sets the current user file to that user.
-int chooseUser(char username[51])
-{
-    char path [75] = "UserData/";
-    strncat(path, username, 75);
-    strncat(path, ".log", 75);
-    userFile = fopen(path, "r+");
-    if (userFile == NULL)
-    {
-        printf("User file not found!\n");
-        return 0;
-    }
-    return 1;
-}
-
-int printUsers ()
-{
-    struct dirent *subdir;
-    DIR *dir;
-    dir = opendir("./UserData");
-    if (dir)
-    {
-        subdir = readdir(dir);
-        subdir = readdir(dir);
-        while ((subdir = readdir(dir)) != NULL)
-        {
-            printf("%s\n", subdir->d_name);
-        }
-        closedir(dir);
-    }
-    return(0);
-}
-
-void logOutUser()
-{
-    fclose(userFile);
-    userFile = NULL;
-}
-
-int deleteUser(char username[51])
-{
-    char path [75] = "UserData/";
-    strncat(path, username, 75);
-    strncat(path, ".log", 75);
-    int success = remove(path);
-    return success;
-}
 
 
 
@@ -338,9 +276,9 @@ mNodeData extractMData(char movieString [] ){
     {
         char token [entryLength];
         int sep =0;
-        while (j < entryLength && movieString[j] != delim)
+        while (j < entryLength && movieString[j] != delim && movieString[j] !='\n')
         {
-            token[sep] = movieString[j];
+                token[sep] = movieString[j];
             j++;
             sep++;
         }
@@ -393,7 +331,7 @@ cNodeData extractCData(char movieString [])
     {
         char token [entryLength];
         int sep =0;
-        while (j < entryLength && movieString[j] != delim)
+        while (j < entryLength && movieString[j] != delim && movieString[j]!= '\n')
         {
             token[sep] = movieString[j];
             j++;
@@ -447,13 +385,14 @@ cNodeData extractCData(char movieString [])
  */
 
 //Converting a node's data into a line of data in the user file.
-int addMovieToFile(struct cNodeData data)
+int addMovieToFile(struct cNodeData data, FILE* userFile)
 {
+    
     if (userFile == NULL)
     {
         return 0;
     }
-    
+   
     //add to user file.
     fprintf(userFile, "%i\t", data.ID);
     fprintf(userFile, "%s\t" , data.type);
@@ -466,7 +405,6 @@ int addMovieToFile(struct cNodeData data)
     fprintf(userFile,"%s\t" , data.genre);
     fprintf(userFile,"%i\t" , data.mediaType);
     fprintf(userFile,"%s\n" , data.date);
-    
     return 1;
 }
 
@@ -480,6 +418,27 @@ void loadMovies()
     while (fgets(curLine, maxLength, movieFile) != NULL)
     {
         Tree_Insert(mTree, extractMData(curLine));
+    }
+}
+
+void loadCatalog()
+{
+    // Max length of file line to read.
+    int maxLength = 550;
+    // Temporary string variable.
+    if (userFile == NULL)
+    {
+        return;
+    }
+    FILE *userSup = fopen(path, "r+");
+    if (userSup== NULL)
+    {
+        printf("User file not found!\n");
+    }
+    char curLine [maxLength];
+    while (fgets(curLine, maxLength, userSup))
+    {
+        Tree_Insert(cTree, extractCData(curLine));
     }
 }
 
@@ -505,12 +464,10 @@ Stack mTree_Query (Tree T, char* string)
         } else
         {
             Push(S, node);
-            (mTree->print)(node->data);
             Node temp =Tree_NextNode(T, node);
             while (compQM(temp->data, string) ==0)
             {
                 Push(S, temp);
-                (mTree->print)(temp->data);
                 temp = Tree_NextNode(T, temp);
                 
             }
@@ -518,7 +475,6 @@ Stack mTree_Query (Tree T, char* string)
             while (compQM(temp->data, string) ==0)
             {
                 Push(S, temp);
-                (mTree->print)(temp->data);
                 temp = Tree_PrevNode(T, temp);
             }
             //Call recursive function on both children to scan for matches.
@@ -528,7 +484,7 @@ Stack mTree_Query (Tree T, char* string)
     return NULL;
 }
 
-Stack cTree_Query (Tree T, char* data)
+Stack cTree_Query (Tree T, char* string)
 {
     //Stack for node data
     Stack S = Stack_New();
@@ -536,23 +492,24 @@ Stack cTree_Query (Tree T, char* data)
     //Runs down the tree searching for first match.
     while (node != NULL)
     {
-        if (compQC(node->data, data) <0)
-        {
-            node = node->left;
-        } else if (compQC(node->data, data)>0)
+        if (compQC(node->data, string) <0)
         {
             node = node->right;
+        } else if (compQC(node->data, string)>0)
+        {
+            node = node->left;
         } else
         {
-            Push(S, node->data);
+            Push(S, node);
             Node temp =Tree_NextNode(T, node);
-            while (compQC(temp->data, data) ==0)
+            while (compQC(temp->data, string) ==0)
             {
                 Push(S, temp);
                 temp = Tree_NextNode(T, temp);
+                
             }
             temp = Tree_PrevNode(T, node);
-            while (compQC(temp->data, data) ==0)
+            while (compQC(temp->data, string) ==0)
             {
                 Push(S, temp);
                 temp = Tree_PrevNode(T, temp);
@@ -564,6 +521,7 @@ Stack cTree_Query (Tree T, char* data)
     return NULL;
 }
 
+// Doesn't work. Fix.
 Stack searchMovies(char* title)
 {
     Stack S = Stack_New();
@@ -608,6 +566,11 @@ Stack searchMovies(char* title)
     }
     return S;
 }
+
+// Search functions. I gave it a think and I came to the conclution that conducting four seperate searches for the title,
+//one if it already begins with an article, is the best way to go. Altering tree nodes in any way will lose me time and space, as I'll have to perform the opperations to store an article-less name.
+// Searching for A title by keyword just wouldn't work with the tree alone. This seemed like the best solution.
+
 Stack searchCatalog(char* title)
 {
     Stack S = Stack_New();
@@ -616,7 +579,7 @@ Stack searchCatalog(char* title)
     char title_THE [197+4];
     char title_AN [197+3];
     //If the user SPECIFICALLY CHOOSES to begin their search with an article, they clearly wanted it there. So we keep the title.
-    if (strncmp(title,"The ", strlen("The ")) || strncmp(title,"A ", strlen("A ")) || strncmp(title,"An ", strlen("An ")) == 0)
+    if (strncmp(title,"The ", strlen("The ")) || strncmp(title,"A ", strlen("A ")) || strncmp(title,"An ", strlen("An ")) == 1)
     {
         Stack temp =cTree_Query(cTree, title);
         return temp;
@@ -663,24 +626,46 @@ int deleteC(Node n)
     Tree_DeleteNode(cTree, n);
     return 1;
 }
+
+void printCTreeR(Node n)
+{
+    if (n != NULL)
+    {
+        (cTree->print)(n->data);
+        printCTreeR(n->left);
+        printCTreeR(n->right);
+    }
+}
+void printCTree()
+{
+    Node n = cTree ->root;
+    if (n != NULL)
+    {
+        (cTree->print)(n->data);
+        printCTreeR(n->left);
+        printCTreeR(n->right);
+    }
+    
+    
+}
 int addMovieToCatalog(Node n, int media, char dateArray[9])
 {
     if (n== NULL)
         return 0;
     mNodeData data = getMNodeData(n);
-    struct cNodeData temp;
-    temp.ID = data->ID;
-    strncpy (temp.type, data->type, strlen(temp.type));
-    strncpy(temp.titleP, data->titleP, strlen(temp.titleP));
-    strncpy(temp.titleO, data->titleO, strlen(temp.titleP));
-    temp.isAdult = data->isAdult;
-    temp.startYear = data->startYear;
-    temp.endYear = data->endYear;
-    temp.runtime = data->runtime;
-    strncpy(temp.genre, data->genre, strlen(temp.genre));
-    temp.mediaType =media;
-    strncpy(temp.date, dateArray, strlen(temp.date));
-    Tree_Insert(cTree, &temp);
+    cNodeData temp = malloc(sizeof(struct cNodeData));
+    temp->ID = data->ID;
+    strcpy (temp->type, data->type);
+    strcpy(temp->titleP, data->titleP);
+    strcpy(temp->titleO, data->titleO);
+    temp->isAdult = data->isAdult;
+    temp->startYear = data->startYear;
+    temp->endYear = data->endYear;
+    temp->runtime = data->runtime;
+    strcpy(temp->genre, data->genre);
+    temp->mediaType =media;
+    strcpy(temp->date, dateArray);
+    Tree_Insert(cTree, temp);
     return 1;
 }
 
@@ -691,26 +676,39 @@ int addMovieToCatalog(Node n, int media, char dateArray[9])
  *
  */
 // Recursive Function for save catalog.
-int saveCatalogR(Node node)
+int saveCatalogR(Node node, FILE * UserSup)
 {
     if (node == NULL)
     {
         return 1;
     }
-    return  addMovieToFile(*(cNodeData)node->data) || saveCatalogR(node->left)|| saveCatalogR(node->right);
+    
+    int r1 = addMovieToFile(*(cNodeData)node->data, UserSup);
+    int r2 = saveCatalogR(node->left, UserSup);
+    int r3 = saveCatalogR(node->right, UserSup);
+    return r1||r2||r3;
     
 }
 
 // Saves the tree to the user file.
 int saveCatalog()
 {
-    Node root = Tree_FirstNode(cTree);
+    Node root = cTree->root;
     if(root== NULL)
     {
         return 1;
     }
+    FILE *userSup = fopen(path, "w");
+    if (userFile== NULL)
+    {
+        printf("User file not found!\n");
+    }
     struct cNodeData temp = *(cNodeData)root->data;
-    return addMovieToFile(temp) || saveCatalogR(root->left)|| saveCatalogR(root->right);;
+    int r1 = addMovieToFile(temp, userSup);
+    int r2 = saveCatalogR(root->left, userSup);
+    int r3 = saveCatalogR(root->right, userSup);
+    fclose(userSup);
+    return r1||r2||r3;
     
     
 }
@@ -741,44 +739,102 @@ void freeTree(Tree tree)
     }
 }
 
-
-/*Stack searchTreeM(char * name)
- {
- Stack S = Stack_New();
- Tree T = mTree;
- Tree_SearchNode(T,);
- return S;
- }
- 
- Stack searchTreeC(char *name)
- {
- Stack S = Stack_New();
- Tree T = cTree;
- return S;
- }
+/*
+ * Creation, selections, printing, logout, and deletion of users.
+ *
  */
 
+// Takes a username, creates a file for it. Returns 0 if the username already exists, or 2 if it results in an invalid file name.
+// I.E, you used a / in your title...
+int createUser(char name[51])
+{
+    //Path shouldn't be more than 75 due to the fact the functions take an array of size 50.
+    //Local path
+    char path[76]="";
+    if(name[0] == '/' || name[0] == '.')
+    {
+        return 2;
+    }
+    strncpy(path,"UserData/", 75);
+    strncat(path, name, 75);
+    strncat(path, ".log", 75);
+    userFile = fopen(path, "r");
+    if(access(path, F_OK ) != -1) {
+        printf("User already exists!\n");
+        return 0;
+    }
+    userFile = fopen(path, "w+");
+    if (userFile == NULL)
+    {
+        return 2;
+    }
+    fclose(userFile);
+    userFile =NULL;
+    return 1;
+}
 
-//Tree_Query --
-//
-//      This one is mine, not part of the site's implementation. Queries for all nodes starting with the keyName.
-//       Returns NULL if none are found.
-//
+// Takes a username, sets the current user file to that user.
+int chooseUser(char name[51])
+{
+    path = malloc(sizeof(char)*76);
+    cTree = Tree_New(compC, printC);
+    //General Path
+    strncpy(path,"UserData/", 75);
+    strncat(path, name, 75);
+    strncat(path, ".log", 75);
+    userFile = fopen(path, "r+");
+    if (userFile == NULL)
+    {
+        return 0;
+    }
+    loadCatalog();
+    return 1;
+}
 
+int printUsers ()
+{
+    struct dirent *subdir;
+    DIR *dir;
+    dir = opendir("./UserData");
+    if (dir)
+    {
+        subdir = readdir(dir);
+        subdir = readdir(dir);
+        while ((subdir = readdir(dir)) != NULL)
+        {
+            printf("%s\n", subdir->d_name);
+        }
+        closedir(dir);
+    }
+    return(0);
+}
 
-// Search functions. I gave it a think and I came to the conclution that conducting four seperate searches for the title,
-//,one if it already begins with an article, is the best way to go. Altering tree nodes in any way will lose me time and space, as I'll have to perform the opperations to store an article-less name.
-// Searching for A title by keyword just wouldn't work with the tree alone. This seemed like the best solution.
+void logOutUser()
+{
+    saveCatalog();
+    fclose(userFile);
+    free(path);
+    userFile = NULL;
+    freeTree(cTree);
+}
+
+int deleteUser(char username[51])
+{
+    char path [75] = "UserData/";
+    strncat(path, username, 75);
+    strncat(path, ".log", 75);
+    int success = remove(path);
+    return success;
+}
 
 
 //Proceedure for closing the database on exiting.
 void closeDatabase()
 {
     freeTree(mTree);
-    saveCatalog();
-    freeTree(cTree);
     fclose(userFile);
     fclose(movieFile);
+    
     
 }
 
@@ -787,17 +843,7 @@ void closeDatabase()
  * Functions for booting up the database.
  *
  */
-void loadCatalog()
-{
-    // Max length of file line to read.
-    int maxLength = 550;
-    // Temporary string variable.
-    char curLine [maxLength];
-    while (fgets(curLine, maxLength, userFile))
-    {
-        Tree_Insert(cTree, extractCData(curLine));
-    }
-}
+
 
 void bootDatabase()
 {
@@ -805,9 +851,7 @@ void bootDatabase()
     mkdir("MovieData", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     mkdir("UserData", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     mTree = Tree_New(compM, printM);
-    cTree = Tree_New(compC, printC);
-    
-    movieFile = fopen("/Users/Theepicone1/Documents/MovieInfo.txt", "r");
+    movieFile = fopen("MovieData/MovieInfo.txt", "r");
     if (movieFile == NULL)
     {
         printf("Movie file not found!\n");
