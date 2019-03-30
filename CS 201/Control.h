@@ -10,18 +10,19 @@
 #define Control_h
 
 #include <stdio.h>
+#include "MovieStack.h"
 
 int createUserC(char[]);
 int deleteUserC(char username [50]);
 void printUsersC(void);
 int logInC(char[]);
 void logOutC(void);
-
-int addToCatalogC(void);
-int deleteFromCatalogC(void);
 void displayCatalogC(void);
-
-struct stringLList searchForTitleC(void);
+int addToCatalogC(Stack S, int mediaType, char date [9], unsigned long int choice);
+int deleteFromCatalogC(Stack S, unsigned long int choice);
+int printStackM(Stack S);
+int printStackC(Stack S);
+Stack searchMoviesC(char name [201]);
 
 
 

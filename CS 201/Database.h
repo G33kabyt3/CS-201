@@ -20,13 +20,16 @@ void closeDatabase(void);
 int sampleFunction(void);
 int createUser(char username[50]);
 int chooseUser(char username[50]);
+int deleteUser(char username[50]);
 int printUsers(void);
 void logOutUser(void);
 struct mNode* getMRoot(void);
 struct cNode* getCRoot(void);
-char * Trimmer(char*);
-void printSample(void);
 Stack searchMovies(char * title);
-int deleteUser(char username[50]);
+void printM (void *a);
+void printC (void *a);
+
+int deleteC(Node n);
+int addMovieToCatalog(Node n, int media, char dateArray[9]);
 
 #endif /* Database_h */

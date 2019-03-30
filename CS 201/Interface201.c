@@ -14,19 +14,21 @@
 /*
  *
  * User Functions
+ * A username can be 50 characters long. Any extra characters will not be considered.
  *
  */
 
+//
 void createUserI()
 {
     
     
-    char username[20];
+    char username[51];
     int success =0;
     while (success!= 1)
     {
-        printf("Please type the desired username for the new user. Please note that it may only be 20 characters long. Any overflow characters will not be considered.\n");
-        scanf("%20s", username);
+        printf("Please type the desired username for the new user. Please note that it may only be 50 characters long. Any overflow characters will not be considered.\n");
+        scanf("%50s", username);
         success = createUserC(username);
         if (success == 0)
         {
@@ -39,11 +41,11 @@ void createUserI()
 
 int logInI()
 {
-    char username[20];
+    char username[51];
     printf("Printing user files...\n");
     printUsersI();
     printf("Please type in the name of the user file you wish to access (Just the name, not the .log).\n");
-    scanf("%20s", username);
+    scanf("%50s", username);
     if (logInC(username)==0)
     {
         printf("Incorrect log in information. Please try again later.\n");
@@ -61,7 +63,19 @@ void logOutI()
 
 void deleteUserI()
 {
-    deleteUserC();
+    char username[51];
+    int success =0;
+    while (success!= 1)
+    {
+        printf("Please type the username for the user you wish to delete . Please note that it may only be 50 characters long. Any overflow characters will not be considered.\n");
+        scanf("%50s", username);
+        success = createUserC(username);
+        if (success == 0)
+        {
+            printf("Username taken. Please try another.\n");
+        }
+        
+    }
     printf("Delete successful.\n");
 }
 
@@ -78,7 +92,62 @@ void printUsersI(){
  */
 void addToCatalogI()
 {
-    
+    char title[201];
+    int success =0;
+    while (success!= 1)
+    {
+        printf("Please type the name of the movie you wish to Add . Please note that the title may only be 200 characters long. Any overflow characters will not be considered.\n");
+        scanf("%200s", title);
+        printf("Printing out results.../n");
+        Stack results =searchMoviesC(title);
+        if (Peek(results)==NULL)
+        {
+            printf("No results found. Please try again with a different query.\n");
+            return;
+        }
+        int numElements = printStackM(results);
+        unsigned long int choice = 0;
+        while (choice == 0){
+            printf("Type the number of the result you wish to add. Any digits beyond the 7th will not be considered.\n");
+            char digits [8];
+            scanf("%7s", digits);
+            choice =  strtoul(digits, (char **)NULL, 10);
+            if (choice == 0)
+            {
+                printf("Please type in a non-zero number\n");
+            } else if (choice >numElements)
+            {
+                choice =0;
+                printf("Please choose a listed option.\n");
+            }
+        }
+        int readMedia =0;
+        unsigned long int input =0;
+        char digits [2];
+        while (input == 0){
+            printf("Please type in a the format of your addition. Type 1 for digital, 2 for DVD, and 3 for Blu-Ray.\n");
+            scanf("%1s", digits);
+            input =  strtoul(digits, (char **)NULL, 10);
+            if (readMedia == 0)
+            {
+                printf("Please type in a non-zero number\n");
+            } else if (input >2 )
+            {
+                input =0;
+                printf("Please choose a listed option");
+            } else {
+                //We can safely cast now that we know the input is within our cases.
+                readMedia = (int) input;
+            }
+        }
+        // If I was coding in a different langugue and had libraries available to me I might actually bother forcing a date format on the user.
+        // However, there really doesn't seem to be a way to do this from scratch in C without it being a LOT more effort than it's worth.
+        // So I won't.
+        char date [18];
+        printf("Please type in the date acquired. Use any format you want, but you're capped at 17 characters.\n");
+        scanf("%17s", date);
+        addToCatalogC(results, readMedia, date, choice);
+    }
 }
 
 void deleteFromCatalogI()
@@ -136,9 +205,10 @@ void mainMenu()
             
         } else if (strcmp(str, "5\n") == 0)
         {
-            printf("Delete Current User Selected.\n");
+            //What happens if current user is deleted?
+            printf("Delete User Selected.\n");
             deleteUserI();
-            terminate = 0;
+            
         } else {
             printf("Please provide valid input.\n");
         }

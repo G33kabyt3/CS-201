@@ -8,9 +8,11 @@
 // Kinda just merged the database and control classes together
 #include "Control.h"
 #include "Database.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
-int createUserC(char username [])
+int createUserC(char username [51])
 {
     return createUser(username);
 }
@@ -21,7 +23,7 @@ void printUsersC()
     printUsers();
 }
 //Wrapper for Database deleteUser().
-int deleteUserC(char username [50])
+int deleteUserC(char username [51])
 {
     return deleteUser(username);
     
@@ -39,25 +41,96 @@ void logOutC()
     logOutUser();
 }
 
-int addToCatalogC(Stack S, int mediaType, char[9] date)
+int addToCatalogC(Stack S, int mediaType, char date [9], unsigned long int choice)
 {
-    return 1;
+    for(int i = 0; i< choice; i++)
+    {
+        Pop(S);
+    }
+    
+    Node N = Pop(S);
+    free(S);
+    return addMovieToCatalog(N, mediaType, date);
 }
 
-int deleteFromCatalogC(Stack S)
+int deleteFromCatalogC(Stack S, unsigned long int choice)
 {
-    return 1;
+    for(int i = 0; i< choice; i++)
+    {
+        Pop(S);
+    }
+    Node N = Pop(S);
+    free(S);
+    return deleteC(N);
 }
 
-int searchMoviesC(char [500] name)
+Stack searchMoviesC(char name [201])
+{
+   return searchMovies(name);
+}
+
+//TO_DO, implement.
+/*
+Stack searchCatalogC(char name [201])
 {
     
 }
-
+*/
 int editCatalog(Stack S)
 {
-    
+    return 1;
 }
+
+//Prints the stack and returns how many elements are in the stack.
+int printStackM(Stack S)
+{
+    Stack temp = Stack_New();
+    Node n = Pop (S);
+    int i = 0;
+    while (n != NULL)
+    {
+        i++;
+        printf("%i :", i);
+        Push(temp, n);
+        printM(n);
+        n = Pop(S);
+    }
+    n = Pop(temp);
+    //Restore the stack
+    while (n!= NULL)
+    {
+        Push(S, n);
+        n= Pop(temp);
+    }
+    free(temp);
+    return i;
+}
+
+// Prints the stack and returns a copy for Catalog Nodes.
+int printStackC(Stack S)
+{
+    Stack temp = Stack_New();
+    Node n = Pop (S);
+    int i = 0;
+    while (n != NULL)
+    {
+        i++;
+        printf("%i :", i);
+        Push(temp, n);
+        printC(n);
+        n = Pop(S);
+    }
+    n = Pop(temp);
+    //Restore the stack
+    while (n!= NULL)
+    {
+        Push(S, n);
+        n= Pop(temp);
+    }
+    free(temp);
+    return i;
+}
+
 
 /*void recursiveDisplay(struct cNode * node)
 {
