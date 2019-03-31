@@ -21,7 +21,7 @@
 /*
  * MAKE SURE YOU BOOT THE DATABASE BEFORE USING ANY OF THESE FUNCTIONS. Some of these are dependent on others.
  * I can neither confirm nor deny its resemblence to a certain type of pasta. But that's what you get in a non-OOP langugue. (Not really, but shhhh.)
- *
+ * As far as
  */
 FILE* userFile;
 FILE* movieFile;
@@ -98,11 +98,6 @@ typedef struct cNodeData
  *
  */
 
-int StartsWith(const char *a, const char *b)
-{
-    if(strncmp(a, b, strlen(a)) == 0) return 1;
-    return 0;
-}
 
 //Takes a username and an empty pathstring.
 char * getPath(char name [51], char pathString[76] )
@@ -125,6 +120,12 @@ cNodeData getCNodeData(Node cNode)
     cNodeData temp = (cNodeData)(cNode->data);
     return temp;
 }
+
+/*
+ *
+ * Functions utilized by the tree itself and derivitives of these functions.
+ *
+ */
 //Comparison for movie data by key. Read throught the function before use.
 int compM (void *a1, void *a2)
 {
@@ -174,17 +175,37 @@ int compC (void *a1, void *a2)
         } else if (nd1->ID> nd2->ID){
             return 1;
         } else{
-            //Same movie being added multiple times, add to the right.
-            return 1;
+            //If same ID, by mediaType.
+            if (nd1->mediaType < nd2->mediaType)
+            {
+                return -1;
+            } else if (nd1->mediaType> nd2->mediaType)
+            {
+                return 1;
+            } else {
+                //And then by date string.
+                if (strcmp(nd1->date, nd2->date) <0)
+                {
+                    return -1;
+                } else if(strcmp(nd1->date, nd2->date) >0) {
+                    return 1;
+                } else {
+                    //And if all these are the same they are effectively the same.
+                    return 0;
+                }
+            }
         }
     }
 }
+
+//These two functions compare a node's data's title to a title string. Don't use if you don't know what you are doing.
 int compQC(void *a1, char * string)
 {
     if( a1 == NULL)
     {
         return -2;
     }
+    // Once again a cast. Dangerous if not done correctly.
     cNodeData nd1 = (cNodeData) a1;
     if (strncmp(nd1->titleP, string, strlen(string)) <0) {
         return -1;
@@ -201,18 +222,20 @@ int compQM(void *a1, char * string)
     {
         return -2;
     }
+    //Casting again.
     mNodeData nd1 = (mNodeData) a1;
-    if (strncmp(nd1->titleP, string, strlen(/*nd1->titleP*/ string)) <0) {
+    if (strncmp(nd1->titleP, string, strlen(string)) <0) {
         return -1;
-    } else if (strncmp(nd1->titleP, string, strlen(/*nd1->titleP*/ string)) >0) {
+    } else if (strncmp(nd1->titleP, string, strlen(string)) >0) {
         return +1;
     } else {
         return 0;
     }
 }
 
-
+// Print functions for printing node data. These contain casts so watch out.
 void printM (void *a) {
+    //Casting
     mNodeData nd = (mNodeData) a;
     printf("%i \t" , nd->ID);
     printf("%s \t" , nd->type);
@@ -225,6 +248,7 @@ void printM (void *a) {
     printf("%s \n" , nd->genre);
 }
 void printC (void *a) {
+    //Casting
     cNodeData nd = (cNodeData)a;
     printf("%i \t" , nd->ID);
     printf("%s \t" , nd->type);
@@ -278,7 +302,7 @@ mNodeData extractMData(char movieString [] ){
         int sep =0;
         while (j < entryLength && movieString[j] != delim && movieString[j] !='\n')
         {
-                token[sep] = movieString[j];
+            token[sep] = movieString[j];
             j++;
             sep++;
         }
@@ -392,7 +416,7 @@ int addMovieToFile(struct cNodeData data, FILE* userFile)
     {
         return 0;
     }
-   
+    
     //add to user file.
     fprintf(userFile, "%i\t", data.ID);
     fprintf(userFile, "%s\t" , data.type);
@@ -679,7 +703,7 @@ int editEntryInCatalog(Node n, int media, char dateArray[9])
     data->mediaType = media;
     strcpy(data->date, dateArray);
     return 1;
-   
+    
     
 }
 
@@ -875,9 +899,4 @@ int bootDatabase()
         loadMovies();
         return 1;
     }
-    
 }
-
-
-
-

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		100D3DF822506ED000C5994C /* makefile in Sources */ = {isa = PBXBuildFile; fileRef = 100D3DF722506ED000C5994C /* makefile */; };
 		104AE419224D11C600131049 /* MovieStack.c in Sources */ = {isa = PBXBuildFile; fileRef = 104AE418224D11C600131049 /* MovieStack.c */; };
 		105A7940222730DC000EAFC9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 105A793F222730DC000EAFC9 /* main.c */; };
 		105A794822273426000EAFC9 /* Interface201.c in Sources */ = {isa = PBXBuildFile; fileRef = 105A794722273426000EAFC9 /* Interface201.c */; };
@@ -28,6 +29,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		100D3DF722506ED000C5994C /* makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
 		104AE417224D11C600131049 /* MovieStack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieStack.h; sourceTree = "<group>"; };
 		104AE418224D11C600131049 /* MovieStack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = MovieStack.c; sourceTree = "<group>"; };
 		105A793C222730DC000EAFC9 /* CS 201 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "CS 201"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +85,7 @@
 				10E1C65C223F3740003CFDBA /* MovieTree.c */,
 				104AE417224D11C600131049 /* MovieStack.h */,
 				104AE418224D11C600131049 /* MovieStack.c */,
+				100D3DF722506ED000C5994C /* makefile */,
 			);
 			path = "CS 201";
 			sourceTree = "<group>";
@@ -144,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				105A794E2227722B000EAFC9 /* Database.c in Sources */,
+				100D3DF822506ED000C5994C /* makefile in Sources */,
 				104AE419224D11C600131049 /* MovieStack.c in Sources */,
 				105A7940222730DC000EAFC9 /* main.c in Sources */,
 				105A794B22277216000EAFC9 /* Control.c in Sources */,

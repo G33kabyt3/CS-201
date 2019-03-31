@@ -66,13 +66,13 @@ int deleteFromCatalogC(Stack S, unsigned long int choice)
 
 Stack searchMoviesC(char name [201])
 {
-   return searchMovies(name);
+    return searchMovies(name);
 }
 
 
 Stack searchCatalogC(char name [201])
 {
- return searchCatalog(name);
+    return searchCatalog(name);
 }
 
 int editCatalogC(Stack S, int mediaType, char date [9], unsigned long int choice)
@@ -140,24 +140,3 @@ void displayCatalogC()
 {
     printCTree();
 }
-
-/*void recursiveDisplay(struct cNode * node)
-{
-    if(node == NULL)
-        return;
-    printCNode(*node);
-    recursiveDisplay(node->left);
-    recursiveDisplay(node->right);
-}
-
-
-*/
-/*struct stringLList searchForTitleC()
- {
- return defaultList;
- }
- 
- struct stringLList getOptions(char searchTerm[]){
- return defaultList;
- }
- */
