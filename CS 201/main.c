@@ -25,10 +25,15 @@ int main(int argc, const char * argv[]) {
     //addUserUL("1", "1");
     //extractCData("0000010\tshort\tExiting the Factory\tLa sortie de l'usine Lumière à Lyon\t0\t1895\t\N\t1\tDocumentary,Short\t1\t11112011");
     //extractCData(string);
-     bootDatabase();
+    if ( bootDatabase() == 1)
+    {
+        bootInterface();
+        closeDatabase();
+    }
+        
+    
     //printSample();
-    bootInterface();
-    closeDatabase();
+    
     
     
    

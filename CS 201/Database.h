@@ -15,7 +15,7 @@
 
 void testPrint(void);
 void refreshUsers(void);
-void bootDatabase(void);
+int bootDatabase(void);
 void closeDatabase(void);
 int sampleFunction(void);
 int createUser(char username[50]);
@@ -30,8 +30,8 @@ Stack searchCatalog(char * title);
 void printM (void *a);
 void printC (void *a);
 void printCTree(void);
-
 int deleteC(Node n);
 int addMovieToCatalog(Node n, int media, char dateArray[9]);
+int editEntryInCatalog(Node n, int media, char dateArray[9]);
 
 #endif /* Database_h */

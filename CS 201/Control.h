@@ -20,10 +20,12 @@ void logOutC(void);
 void displayCatalogC(void);
 int addToCatalogC(Stack S, int mediaType, char date [9], unsigned long int choice);
 int deleteFromCatalogC(Stack S, unsigned long int choice);
+int editCatalogC(Stack S, int mediaType, char date [9], unsigned long int choice);
 int printStackM(Stack S);
 int printStackC(Stack S);
 Stack searchMoviesC(char name [201]);
 Stack searchCatalogC(char name [201]);
+
 
 
 

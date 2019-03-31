@@ -465,14 +465,14 @@ Stack mTree_Query (Tree T, char* string)
         {
             Push(S, node);
             Node temp =Tree_NextNode(T, node);
-            while (compQM(temp->data, string) ==0)
+            while (temp != NULL &&  compQM(temp->data, string) ==0 )
             {
                 Push(S, temp);
                 temp = Tree_NextNode(T, temp);
                 
             }
             temp = Tree_PrevNode(T, node);
-            while (compQM(temp->data, string) ==0)
+            while (temp != NULL && compQM(temp->data, string) ==0)
             {
                 Push(S, temp);
                 temp = Tree_PrevNode(T, temp);
@@ -502,14 +502,14 @@ Stack cTree_Query (Tree T, char* string)
         {
             Push(S, node);
             Node temp =Tree_NextNode(T, node);
-            while (compQC(temp->data, string) ==0)
+            while (temp != NULL &&  compQC(temp->data, string) ==0)
             {
                 Push(S, temp);
                 temp = Tree_NextNode(T, temp);
                 
             }
             temp = Tree_PrevNode(T, node);
-            while (compQC(temp->data, string) ==0)
+            while (temp != NULL &&  compQC(temp->data, string) ==0)
             {
                 Push(S, temp);
                 temp = Tree_PrevNode(T, temp);
@@ -667,6 +667,20 @@ int addMovieToCatalog(Node n, int media, char dateArray[9])
     strcpy(temp->date, dateArray);
     Tree_Insert(cTree, temp);
     return 1;
+}
+
+
+int editEntryInCatalog(Node n, int media, char dateArray[9])
+{
+    if (n== NULL){
+        return 0;
+    }
+    cNodeData data = getCNodeData(n);
+    data->mediaType = media;
+    strcpy(data->date, dateArray);
+    return 1;
+   
+    
 }
 
 
@@ -844,8 +858,8 @@ void closeDatabase()
  *
  */
 
-
-void bootDatabase()
+// Returns 1 if succesful, returns 0 if not.
+int bootDatabase()
 {
     //TODO: Make better file pathnames.
     mkdir("MovieData", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -854,9 +868,14 @@ void bootDatabase()
     movieFile = fopen("MovieData/MovieInfo.txt", "r");
     if (movieFile == NULL)
     {
-        printf("Movie file not found!\n");
+        printf("Movie file not found! Place movie file in the MovieData file in your home directory.\n");
+        return 0;
+    } else
+    {
+        loadMovies();
+        return 1;
     }
-    loadMovies();
+    
 }
 
 

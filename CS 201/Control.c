@@ -55,7 +55,7 @@ int addToCatalogC(Stack S, int mediaType, char date [9], unsigned long int choic
 
 int deleteFromCatalogC(Stack S, unsigned long int choice)
 {
-    for(int i = 0; i< choice; i++)
+    for(int i = 0; i< choice-1; i++)
     {
         Pop(S);
     }
@@ -75,9 +75,16 @@ Stack searchCatalogC(char name [201])
  return searchCatalog(name);
 }
 
-int editCatalogI(Stack S)
+int editCatalogC(Stack S, int mediaType, char date [9], unsigned long int choice)
 {
-    return 1;
+    for(int i = 0; i< choice-1; i++)
+    {
+        Pop(S);
+    }
+    
+    Node N = Pop(S);
+    free(S);
+    return editEntryInCatalog(N, mediaType, date);
 }
 
 //Prints the stack and returns how many elements are in the stack.
