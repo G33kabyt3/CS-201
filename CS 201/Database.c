@@ -7,16 +7,17 @@
 //
 
 #include "Database.h"
+#include "MovieStack.h"
+#include "MovieTree.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
-#include "MovieTree.h"
 #include <dirent.h>
 #include <unistd.h>
-#include "MovieStack.h"
+
 //#include <literally_every_C_library.h>
 /*
  * MAKE SURE YOU BOOT THE DATABASE BEFORE USING ANY OF THESE FUNCTIONS. Some of these are dependent on others.
