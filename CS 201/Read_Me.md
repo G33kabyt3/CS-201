@@ -35,6 +35,7 @@ Next, you are sent to the main menu, where you can conduct a variety of operatio
 
 In order for your changes to be saved, you need to log out the user. This will save all changes to the user file. After you log out, you will be sent back to the log in prompt, where you can either log in again, create a new user, delete the user you made, or exit the program by typing $exit. 
 
+
 If you have any questions, email me at TBRoss1@crimson.ua.edu, and I would be happy to answer them. 
 
 One more things:
