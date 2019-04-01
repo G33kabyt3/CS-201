@@ -506,7 +506,7 @@ Stack mTree_Query (Tree T, char* string)
             return S;
         }
     }
-    return NULL;
+    return S;
 }
 
 Stack cTree_Query (Tree T, char* string)
@@ -543,30 +543,38 @@ Stack cTree_Query (Tree T, char* string)
             return S;
         }
     }
-    return NULL;
+    return S;
 }
 
-// Doesn't work. Fix.
+// Search functions. I gave it a think and I came to the conclution that conducting four seperate searches for the title,
+//one if it already begins with an article, is the best way to go. Altering tree nodes in any way will lose me time and space, as I'll have to perform the opperations to store an article-less name.
+// Searching for A title by keyword just wouldn't work with the tree alone. This seemed like the best solution.
 Stack searchMovies(char* title)
 {
     Stack S = Stack_New();
-    //Longest title is 196 characters, + 1 null space = 197, so the maximum length the arrays should need to be is...
-    char title_A [197+2];
-    char title_THE [197+4];
-    char title_AN [197+3];
+    //Longest title a use can type is 200 characters, + 1 null space = 201, so the maximum length the arrays should need to be is...
+    const int longest = 201;
+    const int titleALen= longest+2;
+    const int titleTheLen= longest+4;
+    const int titleAnLen = longest+3;
+    char title_A [titleALen] ="";
+    char title_THE [titleTheLen]="";
+    char title_AN [titleAnLen]="";
     //If the user SPECIFICALLY CHOOSES to begin their search with an article, they clearly wanted it there. So we keep the title.
-    if (strncmp(title,"The ", strlen("The ")) || strncmp(title,"A ", strlen("A ")) || strncmp(title,"An ", strlen("An ")) == 1)
+    if (strncmp(title,"The ", 5) == 0 || strncmp(title,"A ", 3) == 0|| strncmp(title,"An ", 4)== 0)
     {
         Stack temp =mTree_Query(mTree, title);
+        S= temp;
         return temp;
     } else {
+        //Don't need to use strncat because we know it's not going to overflow.
         strcat(title_A, "A ");
         strcat(title_AN, "An ");
         strcat(title_THE,"The " );
         //This, on the otherhand... best to be safe.
-        strncat(title_A, title, strlen(title_A));
-        strncat(title_THE, title, strlen(title_A));
-        strncat(title_AN, title, strlen(title_A));
+        strncat(title_A, title, titleALen-1);
+        strncat(title_THE, title, titleTheLen-1);
+        strncat(title_AN, title, titleAnLen-1);
         // Get the stacks of the result of each...
         Stack temp =mTree_Query(mTree, title);
         Stack temp_A = Stack_New();
@@ -588,23 +596,27 @@ Stack searchMovies(char* title)
         {
             Push(temp, Pop(temp_AN));
         }
+        
+        return temp;
     }
     return S;
 }
 
-// Search functions. I gave it a think and I came to the conclution that conducting four seperate searches for the title,
-//one if it already begins with an article, is the best way to go. Altering tree nodes in any way will lose me time and space, as I'll have to perform the opperations to store an article-less name.
-// Searching for A title by keyword just wouldn't work with the tree alone. This seemed like the best solution.
+
 
 Stack searchCatalog(char* title)
 {
     Stack S = Stack_New();
-    //Longest title is 196 characters, + 1 null space = 197, so the maximum length the arrays should need to be is...
-    char title_A [197+2];
-    char title_THE [197+4];
-    char title_AN [197+3];
+    //Longest title is 200 characters, + 1 null space = 201, so the maximum length the arrays should need to be is...
+    const int longest = 201;
+    const int titleALen= longest+2;
+    const int titleTheLen= longest+4;
+    const int titleAnLen = longest+3;
+    char title_A [titleALen] ="";
+    char title_THE [titleTheLen]="";
+    char title_AN [titleAnLen]="";
     //If the user SPECIFICALLY CHOOSES to begin their search with an article, they clearly wanted it there. So we keep the title.
-    if (strncmp(title,"The ", strlen("The ")) || strncmp(title,"A ", strlen("A ")) || strncmp(title,"An ", strlen("An ")) == 1)
+    if (strncmp(title,"The ", 5) == 0 || strncmp(title,"A ", 3) == 0|| strncmp(title,"An ", 4)== 0)
     {
         Stack temp =cTree_Query(cTree, title);
         return temp;
@@ -615,9 +627,9 @@ Stack searchCatalog(char* title)
         strcat(title_AN, "An ");
         strcat(title_THE,"The " );
         //This, on the otherhand... best to be safe.
-        strncat(title_A, title, strlen(title_A));
-        strncat(title_THE, title, strlen(title_A));
-        strncat(title_AN, title, strlen(title_A));
+        strncat(title_A, title, titleALen-1);
+        strncat(title_THE, title, titleTheLen-1);
+        strncat(title_AN, title, titleAnLen-1);
         // Get the stacks of the result of each...
         Stack temp =cTree_Query(cTree, title);
         Stack temp_A = Stack_New();
@@ -626,7 +638,7 @@ Stack searchCatalog(char* title)
         temp_A = cTree_Query(cTree, title_A);
         temp_THE = cTree_Query(cTree, title_THE);
         temp_AN = cTree_Query(cTree, title_AN);
-        
+        // And combine them.
         while(Peek(temp_A)!= NULL)
         {
             Push(temp, Pop(temp_A));
@@ -639,6 +651,7 @@ Stack searchCatalog(char* title)
         {
             Push(temp, Pop(temp_AN));
         }
+        return temp;
     }
     return S;
 }
@@ -673,6 +686,8 @@ void printCTree()
     
     
 }
+
+//For adding a found movie to the catalog.
 int addMovieToCatalog(Node n, int media, char dateArray[9])
 {
     if (n== NULL)
@@ -690,8 +705,8 @@ int addMovieToCatalog(Node n, int media, char dateArray[9])
     strcpy(temp->genre, data->genre);
     temp->mediaType =media;
     strcpy(temp->date, dateArray);
-    Tree_Insert(cTree, temp);
-    return 1;
+    return Tree_Insert(cTree, temp);
+
 }
 
 
@@ -703,8 +718,8 @@ int editEntryInCatalog(Node n, int media, char dateArray[9])
     cNodeData data = getCNodeData(n);
     data->mediaType = media;
     strcpy(data->date, dateArray);
-    return 1;
     
+    return 1;
     
 }
 

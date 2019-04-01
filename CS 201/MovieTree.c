@@ -65,7 +65,7 @@ Tree Tree_New (int (*comp)(void *, void *), void (*print)(void *) ) {
 //     Insert new data in the tree. If the data is already in the tree,
 //     nothing will be done.
 //
-void Tree_Insert (Tree t, void *data) {
+int Tree_Insert (Tree t, void *data) {
     if (t->root == NULL) {
         t->root = Node_New (data, NULL);
     } else {
@@ -76,7 +76,7 @@ void Tree_Insert (Tree t, void *data) {
                 if (left == NULL) {
                     node->left = Node_New (data, node);
                     Tree_InsertBalance (t, node, -1);
-                    return;
+                    return 1;
                 } else {
                     node = left;
                 }
@@ -85,16 +85,17 @@ void Tree_Insert (Tree t, void *data) {
                 if (right == NULL) {
                     node->right = Node_New (data, node);
                     Tree_InsertBalance (t, node, 1);
-                    return;
+                    return 1;
                 } else {
                     node = right;
                 }
             } else {
                 node->data = data;
-                return;
+                return -1;
             }
         }
     }
+    return 1;
 }
 
 // Tree_DeleteNode --

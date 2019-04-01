@@ -18,7 +18,7 @@
  *
  */
 
-//TO_DO Edit catalog, Delete catalog, figure out how to make search function work, figure out how to not read multiple times.
+//TO_DO figure out how to make search function work, how to prevent blank input for file.
 
 // I firmly believe the fact that I had to spend an hour implimenting this means 1 of 2 things.
 // 1.) I got hit with the stupid stick when I was a child.
@@ -50,15 +50,19 @@ void createUserI()
         printf("Please type the desired username for the new user.  It may not contain /'s and may not start with .'s. Please note that it may only be 50 characters long. Any overflow characters will not be considered.\n");
         getInput(username, 51);
         trimNewLine(username);
-        success = createUserC(username);
-        if (success == 0)
+        if(strlen(username)== 0)
         {
-            printf("The username was taken. Please try another name.\n");
-        } else if (success == 2)
-        {
-            printf("You used a forbidden character. Please don't.\n");
+            
+        } else {
+            success = createUserC(username);
+            if (success == 0)
+            {
+                printf("The username was taken. Please try another name.\n");
+            } else if (success == 2)
+            {
+                printf("You used a forbidden character. Please don't.\n");
+            }
         }
-        
     }
     printf("Creation Successful. \n");
     free(username);
@@ -69,7 +73,6 @@ int logInI()
     char *username = malloc(sizeof(char)*51);
     printf("Printing user files...\n");
     printUsersI();
-    trimNewLine(username);
     printf("Choose the .log file you wish to load. Please type in the name of the user file you wish to access (Just the name, not the .log).\n");
     getInput(username, 51);
     trimNewLine(username);
@@ -95,9 +98,9 @@ void deleteUserI()
     int success =0;
     printf("Printing user files...\n");
     printUsersI();
-    trimNewLine(username);
     printf("Please type the username for the user you wish to delete. Please note that it may only be 50 characters long. Any overflow characters will not be considered.\n");
     getInput(username, 51);
+    trimNewLine(username);
     success = deleteUserC(username);
     //For some reason the remove() function for C returns 0 on success.
     if (success == 0)
@@ -126,63 +129,72 @@ void addToCatalogI()
     printf("Please type the name of the movie you wish to add. Please note that the title may only be 200 characters long. Any overflow characters will not be considered.\n");
     getInput(title, 201);
     trimNewLine(title);
-    printf("Printing out results...\n");
-    Stack results = searchMoviesC(title);
-    if (Peek(results)==NULL)
+    if(strlen(title)== 0)
     {
-        printf("No results found. Please try again with a different query.\n");
-        return;
-    }
-    int numElements = printStackM(results);
-    char *digits = malloc(sizeof(char)*8);
-    unsigned long int choice = 0;
-    while (choice == 0){
-        printf("Type the number of the result you wish to add. Any digits beyond the 7th will not be considered.\n");
-        
-        getInput(digits, 8);
-        trimNewLine(digits);
-        choice =  strtoul(digits, (char **)NULL, 10);
-        if (choice == 0)
+        printf("No input detected.\n" );
+    } else {
+        printf("Printing out results...\n");
+        Stack results = searchMoviesC(title);
+        if (Peek(results)==NULL)
         {
-            printf("Please type in a non-zero number\n");
-        } else if (choice >numElements)
-        {
-            choice =0;
-            printf("Please choose a listed option.\n");
+            printf("No results found. Please try again with a different query.\n");
+            return;
         }
-    }
-    int readMedia =0;
-    unsigned long int input =0;
-    char *mediaString = malloc(sizeof(char)*2);
-    while (input == 0){
-        printf("Please type in a the format of your addition. Type 1 for digital, 2 for DVD, and 3 for Blu-Ray.\n");
-        getInput(mediaString, 2);
-        trimNewLine(mediaString);
-        input =  strtoul(mediaString, (char **)NULL, 10);
-        if (input == 0)
-        {
-            printf("Please type in a non-zero number\n");
-        } else if (input >2 )
-        {
-            input =0;
-            printf("Please choose a listed option\n");
+        int numElements = printStackM(results);
+        char *digits = malloc(sizeof(char)*8);
+        unsigned long int choice = 0;
+        while (choice == 0){
+            printf("Type the number of the result you wish to add. Any digits beyond the 7th will not be considered.\n");
+            
+            getInput(digits, 8);
+            trimNewLine(digits);
+            choice =  strtoul(digits, (char **)NULL, 10);
+            if (choice == 0)
+            {
+                printf("Please type in a greater than zero number\n");
+            } else if (choice >numElements)
+            {
+                choice =0;
+                printf("Please choose a listed option.\n");
+            }
+        }
+        int readMedia =0;
+        unsigned long int input =0;
+        char *mediaString = malloc(sizeof(char)*2);
+        while (input == 0){
+            printf("Please type in a the format of your addition. Type 1 for digital, 2 for DVD, and 3 for Blu-Ray.\n");
+            getInput(mediaString, 2);
+            trimNewLine(mediaString);
+            input =  strtoul(mediaString, (char **)NULL, 10);
+            if (input == 0)
+            {
+                printf("Please type in a greater than zero number\n");
+            } else if (input >3 )
+            {
+                input =0;
+                printf("Please choose a listed option\n");
+            } else {
+                //We can safely cast now that we know the input is within our cases.
+                readMedia = (int) input;
+            }
+        }
+        // If I was coding in a different langugue and had libraries available to me I might actually bother forcing a date format on the user.
+        // However, there really doesn't seem to be a way to do this from scratch in C without it being a LOT more effort than it's worth.
+        // So I won't.
+        char *date = malloc(sizeof(char)*18);
+        printf("Please type in the date acquired. Use any format you want, but you're cut off at 17 characters.\n");
+        getInput(date, 18);
+        trimNewLine(date);
+        if (addToCatalogC(results, readMedia, date, choice) == -1){
+            printf("Add failed. Identical entry already in catalog.\n");
         } else {
-            //We can safely cast now that we know the input is within our cases.
-            readMedia = (int) input;
+            printf("Add Successful.\n");
         }
+        
+        free(mediaString);
+        free(date);
+        free(digits);
     }
-    // If I was coding in a different langugue and had libraries available to me I might actually bother forcing a date format on the user.
-    // However, there really doesn't seem to be a way to do this from scratch in C without it being a LOT more effort than it's worth.
-    // So I won't.
-    char *date = malloc(sizeof(char)*18);
-    printf("Please type in the date acquired. Use any format you want, but you're cut off at 17 characters.\n");
-    getInput(date, 18);
-    trimNewLine(date);
-    addToCatalogC(results, readMedia, date, choice);
-    printf("Add Successful.\n");
-    free(mediaString);
-    free(date);
-    free(digits);
     free(title);
 }
 
@@ -210,7 +222,7 @@ void deleteFromCatalogI()
         choice =  strtoul(digits, (char **)NULL, 10);
         if (choice == 0)
         {
-            printf("Please type in a non-zero number\n");
+            printf("Please type in a greater than zero number\n");
         } else if (choice >numElements)
         {
             choice =0;
@@ -241,14 +253,14 @@ void editCatalogI()
     char *digits = malloc(sizeof(char)*8);
     unsigned long int choice = 0;
     while (choice == 0){
-        printf("Type the number of the result you wish to add. Any digits beyond the 7th will not be considered.\n");
+        printf("Type the number of the result you wish to edit. Any digits beyond the 7th will not be considered.\n");
         
         getInput(digits, 8);
         trimNewLine(digits);
         choice =  strtoul(digits, (char **)NULL, 10);
         if (choice == 0)
         {
-            printf("Please type in a non-zero number\n");
+            printf("Please type in a greater than zero number\n");
         } else if (choice >numElements)
         {
             choice =0;
@@ -265,8 +277,8 @@ void editCatalogI()
         input =  strtoul(mediaString, (char **)NULL, 10);
         if (input == 0)
         {
-            printf("Please type in a non-zero number\n");
-        } else if (input >2 )
+            printf("Please type in a greater than zero number\n");
+        } else if (input >3 )
         {
             input =0;
             printf("Please choose a listed option\n");
@@ -283,7 +295,8 @@ void editCatalogI()
     getInput(date, 18);
     trimNewLine(date);
     editCatalogC(results, readMedia, date, choice);
-    printf("Edit Successful.\n");
+        printf("Edit Successful.\n");
+    
     free(mediaString);
     free(date);
     free(digits);
@@ -314,30 +327,26 @@ void mainMenu()
     int terminate =1;
     
     while ( terminate != 0){
-        printf("Hello! Type 0 to search for a title, 1 to add a your catalog, 2 to delete from your catalog, 3 to edit the catalog, 4 to display your catalog, 5 to log out.\n ");
+        printf("Hello! Type 0 to add a your catalog, 1 to delete from your catalog, 2 to edit the catalog, 3 to display your catalog, 4 to log out.\n ");
         getInput(str, 2);
         trimNewLine(str);
         if (strncmp(str, "0", 1) == 0)
         {
-            printf("Search For Title Selected.\n");
-            searchForTitleI();
-        } else if (strncmp(str, "1", 1) == 0)
-        {
             printf("Add to Catalog Selected.\n");
             addToCatalogI();
-            printf("Add Successful, Sending you back to the main menu.\n");
-        } else if (strncmp(str, "2",1) ==0 ){
+            printf("Sending you back to the main menu.\n");
+        } else if (strncmp(str, "1",1) ==0 ){
             printf("Delete From Catalog Selected.\n");
             deleteFromCatalogI();
-        }else if (strncmp(str, "3",1)==0)
+        }else if (strncmp(str, "2",1)==0)
         {
             printf("Edit in Catalog Selected.\n");
             editCatalogI();
-        } else if (strncmp(str, "4",1) == 0)
+        } else if (strncmp(str, "3",1) == 0)
         {
             printf("Display Catalog Selected.\n");
             displayCatalogI();
-        } else if (strncmp(str, "5", 1) == 0)
+        } else if (strncmp(str, "4", 1) == 0)
         {
             printf("Log Out Selected\n");
             logOutI();

@@ -32,7 +32,7 @@ struct Tree {
 
 Tree  Tree_New        (int (*comp)(void *, void *), void (*print)(void *));
 
-void  Tree_Insert     (Tree t, void *data);
+int  Tree_Insert     (Tree t, void *data);
 void  Tree_DeleteNode (Tree t, Node  node);
 Node  Tree_SearchNode (Tree t, void *data);
 
