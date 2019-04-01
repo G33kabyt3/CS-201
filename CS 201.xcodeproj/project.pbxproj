@@ -41,7 +41,7 @@
 		105A794C2227722B000EAFC9 /* Database.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
 		105A794D2227722B000EAFC9 /* Database.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Database.c; sourceTree = "<group>"; };
 		10913CDF22512D90005AE189 /* Read_Me.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Read_Me.md; sourceTree = "<group>"; };
-		10913CE12251C4B6005AE189 /* CS_201 Demo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "CS_201 Demo.mov"; sourceTree = "<group>"; };
+		10913CE22251C942005AE189 /* CS_201 Demo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "CS_201 Demo.mov"; path = "../../CS 201/CS 201/CS_201 Demo.mov"; sourceTree = "<group>"; };
 		10E1C65B223F3740003CFDBA /* MovieTree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieTree.h; sourceTree = "<group>"; };
 		10E1C65C223F3740003CFDBA /* MovieTree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = MovieTree.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,12 +76,12 @@
 		105A793E222730DC000EAFC9 /* CS 201 */ = {
 			isa = PBXGroup;
 			children = (
+				10913CE22251C942005AE189 /* CS_201 Demo.mov */,
 				105A793F222730DC000EAFC9 /* main.c */,
 				105A794622273426000EAFC9 /* Interface201.h */,
 				105A794722273426000EAFC9 /* Interface201.c */,
 				105A794922277216000EAFC9 /* Control.h */,
 				105A794A22277216000EAFC9 /* Control.c */,
-				10913CE12251C4B6005AE189 /* CS_201 Demo.mov */,
 				105A794C2227722B000EAFC9 /* Database.h */,
 				105A794D2227722B000EAFC9 /* Database.c */,
 				10E1C65B223F3740003CFDBA /* MovieTree.h */,
