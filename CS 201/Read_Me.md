@@ -1,3 +1,6 @@
+Video at: https://youtu.be/Q-ONuWzD3_A
+
+The first part is all you need to watch to learn how to use it. The second part is just showing the program works under various circumstances. You should be able to stop watching at around 9 minutes.
 Greetings! I'm the creator of this application, Timothy Ross. Here's how you get it to work!
 
 If these steps are not done correctly, I can make no guarantee that the program will run. 
